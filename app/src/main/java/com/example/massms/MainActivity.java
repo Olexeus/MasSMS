@@ -1,5 +1,6 @@
 package com.example.massms;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,8 +12,17 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+    public static File xlsx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.settings, menu);
+        getMenuInflater().inflate(R.menu.import_contacts, menu);
         return true;
     }
 
@@ -46,10 +57,17 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.settings) {
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (id == R.id.import_contacts) {
+            Toast.makeText(this, "Click the \"Import\" button to get started", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
