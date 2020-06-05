@@ -81,8 +81,11 @@ public class FirstFragment extends Fragment {
                             Gson gson = new Gson();
                             Group newGroup = new Group();
 
+                            // TODO: use commented string when conversion is fixed
                             // String JsonString = MainActivity.excelJsonObject.toString();
                             String JsonString = "{\"Ward\":[{\"first\":\"Zach\",\"last\":\"Peterson\",\"phone\":9.132719504E9},{\"first\":\"Elder1\",\"last\":\"Smith\",\"phone\":5.551112222E9},{\"first\":\"Deacon1\",\"last\":\"Smith\",\"phone\":4.441113333E9}]}";
+
+                            // Creates a new Group class
                             newGroup = gson.fromJson(JsonString, Group.class);
                             Log.d("Group object", newGroup.toString());
 
