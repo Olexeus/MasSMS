@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -21,7 +22,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,6 +77,15 @@ public class FirstFragment extends Fragment {
                             // getExcelDataAsJsonObject is probably too expensive to run on the ui thread
                             MainActivity.excelJsonObject = getExcelDataAsJsonObject(inputStream);
                             Log.d("First Fragment", MainActivity.excelJsonObject.toString());
+
+                            Gson gson = new Gson();
+                            Group newGroup = new Group();
+
+                            // String JsonString = MainActivity.excelJsonObject.toString();
+                            String JsonString = "{\"Ward\":[{\"first\":\"Zach\",\"last\":\"Peterson\",\"phone\":9.132719504E9},{\"first\":\"Elder1\",\"last\":\"Smith\",\"phone\":5.551112222E9},{\"first\":\"Deacon1\",\"last\":\"Smith\",\"phone\":4.441113333E9}]}";
+                            newGroup = gson.fromJson(JsonString, Group.class);
+                            Log.d("Group object", newGroup.toString());
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

@@ -1,20 +1,22 @@
 package com.example.massms;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
-
 public class MainActivity extends AppCompatActivity {
+
+    // TODO: create list of Group. Maybe class that reads the JSON file with links to all the groups
+    // TODO: function to add the Groups to the GroupList class (or whatever it is called)
     public static JsonObject excelJsonObject = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

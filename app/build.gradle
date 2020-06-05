@@ -35,10 +35,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation files('libs/poishadow-all.jar')
 
-    compile 'commons-codec:commons-codec:1.14'
+    implementation 'commons-codec:commons-codec:1.14'
 //    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
 
-    testImplementation 'junit:junit:4.12'
+    implementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
