@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class FirstFragment extends Fragment {
+public class ImportFragment extends Fragment {
 
     @Override
     public View onCreateView(
@@ -95,7 +95,7 @@ public class FirstFragment extends Fragment {
                     }
                 }, "ExcelToJsonThread").start();
 
-                NavHostFragment.findNavController(FirstFragment.this)
+                NavHostFragment.findNavController(ImportFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);
             }
         } catch (Exception ex) {
