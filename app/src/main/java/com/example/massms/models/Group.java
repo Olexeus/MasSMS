@@ -1,4 +1,4 @@
-package com.example.massms;
+package com.example.massms.models;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +12,7 @@ public class Group {
     @SerializedName(value="Ward", alternate={"Sheet 1", "Sheet 2"})
     private List<Person> contacts;
 
-    Group() {
+    public Group() {
         groupName = null;
         contacts = new ArrayList<>();
     }

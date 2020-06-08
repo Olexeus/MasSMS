@@ -1,4 +1,4 @@
-package com.example.massms;
+package com.example.massms.models;
 
 
 import com.google.gson.annotations.SerializedName;
