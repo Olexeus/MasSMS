@@ -1,4 +1,4 @@
-package com.example.massms;
+package com.example.massms.main;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.massms.models.Group;
+import com.example.massms.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -27,13 +29,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class ImportFragment extends Fragment {
+public class ImportFragment extends Fragment implements ImportContract.View {
+    ImportContract.Presenter presenter;
+
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        // I'm not sure whether these 2 methods would go in here or onViewCreated since I still don't fully understand fragments.
+        setPresenter(new ImportPresenter(this));
+        presenter.onViewCreated();
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_first, container, false);
     }
@@ -160,5 +168,16 @@ public class ImportFragment extends Fragment {
 
         }
         return sheetsJsonObject;
+    }
+
+    @Override
+    public void display() {
+
+    }
+
+    // We never construct a MainActivity so we call this in onCreate to store a reference.
+    @Override
+    public void setPresenter(ImportContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 }
