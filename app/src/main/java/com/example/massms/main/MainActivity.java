@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
  *  TODO : Everything must be "MVPitized".
  */
 public class MainActivity extends AppCompatActivity implements MainContract.View {
+    // TODO: Move Data Stuff to a model
     public static JsonObject excelJsonObject = null;
 
     // Add a presenter property. The view needs the presenter to invoke user initiated callbacks.
@@ -47,11 +48,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         // Store a reference to the presenter just after creating it.
         setPresenter(new MainPresenter(this));
         presenter.onViewCreated();
-
-        // This make POI work for some reason, just don't worry about it.
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLInputFactory", "com.fasterxml.aalto.stax.InputFactoryImpl");
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLEventFactory", "com.fasterxml.aalto.stax.EventFactoryImpl");
     }
 
     @Override
@@ -82,10 +78,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         return super.onOptionsItemSelected(item);
     }
 
-    //
     @Override
-    public void display() {
-        // TODO
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     // We never construct a MainActivity so we call this in onCreate to store a reference.

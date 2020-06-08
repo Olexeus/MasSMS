@@ -13,6 +13,6 @@ public interface MainContract {
 
     interface View extends BaseView<Presenter> {
         // We will add any "display-like" methods that the Presenter should know about here.
-        void display();
+        //void display();
     }
 }

@@ -13,10 +13,16 @@ public class MainPresenter implements MainContract.Presenter {
         this.view = view;
     }
 
+    private void setPoiProperties() {
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLInputFactory", "com.fasterxml.aalto.stax.InputFactoryImpl");
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLEventFactory", "com.fasterxml.aalto.stax.EventFactoryImpl");
+    }
+
     // Called by the view when it is created
     @Override
     public void onViewCreated() {
-
+        setPoiProperties();
     }
 
     // Called by the view when it is destroyed
