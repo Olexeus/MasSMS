@@ -3,12 +3,12 @@ package com.example.massms.main;
 import com.example.massms.BasePresenter;
 import com.example.massms.BaseView;
 
+// This is the contract between our view and presenter
+// TODO : add more methods :-)
 public interface MainContract {
     interface Presenter extends BasePresenter {
         // This is called in the Activity's or Fragment's onCreate method.
         void onViewCreated();
-
-        // TODO : add more methods :-)
     }
 
     interface View extends BaseView<Presenter> {
