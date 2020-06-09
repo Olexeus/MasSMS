@@ -11,12 +11,10 @@ public class ListPresenter implements ListContract.Presenter {
     // Called by the view when it is created
     @Override
     public void onViewCreated() {
-        // TODO
     }
 
     // Called by the view when it is destroyed
     @Override
     public void onDestroy() {
-        // TODO
     }
 }

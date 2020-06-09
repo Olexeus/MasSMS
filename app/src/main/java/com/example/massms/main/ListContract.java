@@ -9,6 +9,6 @@ public interface ListContract {
     }
 
     interface View extends BaseView<Presenter> {
-        void display();
+        //void display();
     }
 }
