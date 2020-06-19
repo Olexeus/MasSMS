@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.util.TimingLogger;
 
 import com.example.massms.models.Group;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -16,7 +16,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,18 +45,17 @@ public class ImportPresenter implements ImportContract.Presenter {
                 try(InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
                     // getExcelDataAsJsonObject is probably too expensive to run on the ui thread
                     // TODO: DataManager should deal with this.
+                    // TODO: check timing
+                    // adb shell setprop log.tag.ExcelToJSON VERBOSE
+                    TimingLogger timings = new TimingLogger("ExcelToJSON", "");
                     MainActivity.excelJsonObject = getExcelDataAsJsonObject(inputStream);
                     Log.d("First Fragment", MainActivity.excelJsonObject.toString());
-
-                    Gson gson = new Gson();
-                    Group newGroup;
-
-                    // TODO: use commented string when conversion is fixed
-                    // String JsonString = MainActivity.excelJsonObject.toString();
-                    String JsonString = "{\"Ward\":[{\"first\":\"Zach\",\"last\":\"Peterson\",\"phone\":9.132719504E9},{\"first\":\"Elder1\",\"last\":\"Smith\",\"phone\":5.551112222E9},{\"first\":\"Deacon1\",\"last\":\"Smith\",\"phone\":4.441113333E9}]}";
-
+                    timings.addSplit("Excel to JSON");
+                    timings.dumpToLog();
                     // Creates a new Group class
-                    newGroup = gson.fromJson(JsonString, Group.class);
+
+                    Group newGroup = Group.fromJson(MainActivity.excelJsonObject.toString());
+                    newGroup.addName("Team 1");
                     Log.d("Group object", newGroup.toString());
 
                 } catch (IOException e) {

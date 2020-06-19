@@ -3,7 +3,7 @@ package com.example.massms;
 
 public class Data{
 
-    public void createDirectory() {
+    /*public void createDirectory() {
         File directory;
         if (filename.isEmpty()) {
             directory = getFilesDir();
@@ -23,6 +23,6 @@ public class Data{
         FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
         fos.write(internalStorageBinding.saveFileEditText.getText().toString().getBytes());
         fos.close();
-    }
+    }*/
 
 }

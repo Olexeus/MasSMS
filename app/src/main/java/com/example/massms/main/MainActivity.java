@@ -21,7 +21,7 @@ import com.google.gson.JsonObject;
  *  TODO : Everything must be "MVPitized".
  */
 public class MainActivity extends AppCompatActivity implements MainContract.View {
-    // TODO: Move Data Stuff to a model
+    // TODO: Move Data.java Stuff to a model
     public static JsonObject excelJsonObject = null;
 
     // Add a presenter property. The view needs the presenter to invoke user initiated callbacks.

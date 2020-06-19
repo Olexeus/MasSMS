@@ -5,16 +5,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class Person {
     // TODO: put an array of possible values
-    @SerializedName(value="First Name", alternate={"first", "First"})
+    @SerializedName(value="first", alternate={"firstname", "First Name"})
     private String firstName;
 
-    @SerializedName(value="Last Name", alternate={"last", "Last"})
+    @SerializedName(value="last", alternate={"lastname", "Last Name"})
     private String lastName;
 
     @SerializedName(value="name", alternate={"Name", "Person"})
     private String name;
 
-    @SerializedName(value="phone")
+    @SerializedName("phone")
     private Float phone;
 
     public Person() {
@@ -26,6 +26,7 @@ public class Person {
 
     // TODO: non-default constructor
     // TODO: get info functions
+    // TODO: comparator
 
     @Override
     public String toString() {
