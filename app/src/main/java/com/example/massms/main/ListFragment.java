@@ -21,8 +21,6 @@ public class ListFragment extends Fragment implements ListContract.View {
         setPresenter(new ListPresenter(this));
         presenter.onViewCreated();
 
-        secondButton = container.findViewById(R.id.button_second);
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_second, container, false);
     }
@@ -30,6 +28,8 @@ public class ListFragment extends Fragment implements ListContract.View {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        secondButton = view.findViewById(R.id.button_second);
 
         secondButton.setOnClickListener(new View.OnClickListener() {
             @Override

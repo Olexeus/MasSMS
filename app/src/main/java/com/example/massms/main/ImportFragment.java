@@ -24,15 +24,15 @@ public class ImportFragment extends Fragment implements ImportContract.View {
         setPresenter(new ImportPresenter(this));
         presenter.onViewCreated();
 
-        // Still not sure whether this kind of stuff belongs here or the next method.
-        importButton = container.findViewById(R.id.import_btn);
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_first, container, false);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Still not sure whether this kind of stuff belongs here or the next method.
+        importButton = view.findViewById(R.id.import_btn);
 
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
