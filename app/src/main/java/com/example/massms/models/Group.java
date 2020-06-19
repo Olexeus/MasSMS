@@ -36,13 +36,20 @@ public class Group {
         contacts.addAll(newContacts);
     }
 
-    // TODO: getContact and getContacts methods
-    public Person getContact() { return new Person();}
-    public List<Person> getContacts() { return new ArrayList<Person>();}
+    // getContact and getContacts methods
+    public Person getContact(int index) {
+        return contacts.get(index);
+    }
+    public List<Person> getContacts() {
+        return contacts;
+    }
 
-    // TODO: conversion to JSON
-    // TODO: should it be static
-    public JsonObject toJson () { return new JsonObject(); }
+    // conversion to JSON
+    public JsonObject toJson () {
+        Gson gson = new Gson();
+        JsonObject convertedGson = new Gson().fromJson(gson.toJson(this), JsonObject.class);
+        return convertedGson;
+    }
 
     public static Group fromJson (String convertJson) {
         convertJson = "{\"Ward\":[{\"first\":\"Zach\",\"last\":\"Peterson\",\"phone\":9.132719504E9},{\"first\":\"Elder1\",\"last\":\"Smith\",\"phone\":5.551112222E9},{\"first\":\"Deacon1\",\"last\":\"Smith\",\"phone\":4.441113333E9}],\"groupName\":\"Smith\"}";
@@ -50,9 +57,9 @@ public class Group {
         Gson gson = new GsonBuilder().registerTypeAdapter(Group.class, new CustomDeserializer()).create();
         Group newGroup = null;
 
-        // TODO: First Sloppy change of name
-        // Changes the first name in the String to the list of contacts
-        /*boolean nameChanged = false;
+        // 1: First Sloppy change of name
+        /*// Changes the first name in the String to the list of contacts
+        boolean nameChanged = false;
         char current, previous;
 
         // Create an array from string and loop through it
@@ -73,7 +80,7 @@ public class Group {
             JsonString += current;
         }*/
 
-        // TODO: Second Sloppy change of name
+        // 2: Second Sloppy change of name
         /*// convert string to JSONObject
         JSONObject stringToJson = null;
         try {
@@ -102,7 +109,7 @@ public class Group {
         JsonString = stringToJson.toString();
 */
 
-        // TODO: Thirst Sloppy solution
+        // 3: Thirst Sloppy solution
         /*
         JsonObject convertedGson = new Gson().fromJson(convertJson, JsonObject.class);
         Set<Map.Entry<String, JsonElement>> groupObjects =  convertedGson.entrySet();
@@ -134,7 +141,8 @@ public class Group {
 
     @Override
     public String toString() {
-        String groupString = "Group name: " + this.groupName;
+        String groupString = String.format("N%n%nGroup name: %s"
+                , this.groupName);
         for (Person c : contacts) {
             groupString += c;
         }

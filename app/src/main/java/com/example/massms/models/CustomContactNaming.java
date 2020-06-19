@@ -13,7 +13,7 @@ class CustomContactNaming implements FieldNamingStrategy {
         // TODO: add all possible variations
         String[] possibleFirst = new String[]{"first", "first name", "firstname"};
         String[] possibleLast = new String[]{"last", "surname", "last name", "lastname"};
-        String[] possibleName = new String[]{"name", "username"};
+        String[] possibleName = new String[]{"name", "username", "person"};
         String[] possiblePhone = new String[]{"phone", "number"};
         // TODO: maybe use Hash_Set.contains(Object element)
         boolean containsFirst = Arrays.asList(possibleFirst).contains(field.getName().toLowerCase());

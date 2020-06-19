@@ -3,15 +3,17 @@ package com.example.massms.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Locale;
+
 public class Person {
-    // TODO: put an array of possible values
-    @SerializedName(value="first", alternate={"firstname", "First Name"})
+    // Possible: @SerializedName(value="first", alternate={"firstname", "first name"})
+    @SerializedName("first")
     private String firstName;
 
-    @SerializedName(value="last", alternate={"lastname", "Last Name"})
+    @SerializedName("last")
     private String lastName;
 
-    @SerializedName(value="name", alternate={"Name", "Person"})
+    @SerializedName("name")
     private String name;
 
     @SerializedName("phone")
@@ -24,8 +26,32 @@ public class Person {
         phone = null;
     }
 
-    // TODO: non-default constructor
-    // TODO: get info functions
+    // non-default constructors
+    public Person(String newName, Float newPhone) {
+        firstName = null;
+        lastName = null;
+        name = newName;
+        phone = newPhone;
+    }
+
+    public Person(String newFirst, String newLast, Float newPhone) {
+        firstName = newFirst;
+        lastName = newLast;
+        name = firstName + " " + lastName;
+        phone = newPhone;
+    }
+
+    // get info functions
+    public String getName() {
+        if (this.name == null)
+            this.name = this.firstName + " " + this.lastName;
+        return this.name;
+    }
+
+    public Float getPhone() {
+        return this.phone;
+    }
+
     // TODO: comparator
 
     @Override
@@ -34,7 +60,7 @@ public class Person {
         // It depends how user defined cotact list
         if (this.name == null)
             this.name = this.firstName + " " + this.lastName;
-        String contactString = String.format("%nName: %s%nPhone: %.0f%n"
+        String contactString = String.format(Locale.US, "%nName: %s%nPhone: %.0f%n"
                 , this.name
                 , this.phone);
 
