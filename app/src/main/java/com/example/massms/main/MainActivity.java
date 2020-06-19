@@ -1,4 +1,4 @@
-package com.example.massms;
+package com.example.massms.main;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,15 +9,26 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.massms.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Remember that the view should be as dumb as possible.
+ * Views only handle what is displayed on screen and user interaction, like a click listener.
+ * Views should not contain any business logic, they only display things.
+ *  TODO : Everything must be "MVPitized".
+ */
+public class MainActivity extends AppCompatActivity implements MainContract.View {
+    // TODO: Move Data Stuff to a model
+    public static JsonObject excelJsonObject = null;
+
+    // Add a presenter property. The view needs the presenter to invoke user initiated callbacks.
+    private MainContract.Presenter presenter;
 
     // TODO: create list of Group. Maybe class that reads the JSON file with links to all the groups
     // TODO: function to add the Groups to the GroupList class (or whatever it is called)
-    public static JsonObject excelJsonObject = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,10 +45,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // This make POI work for some reason, just don't worry about it.
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLInputFactory", "com.fasterxml.aalto.stax.InputFactoryImpl");
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLEventFactory", "com.fasterxml.aalto.stax.EventFactoryImpl");
+        // Store a reference to the presenter just after creating it.
+        setPresenter(new MainPresenter(this));
+        presenter.onViewCreated();
     }
 
     @Override
@@ -66,5 +76,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
+
+    // We never construct a MainActivity so we call this in onCreate to store a reference.
+    @Override
+    public void setPresenter(MainContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 }
