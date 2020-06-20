@@ -45,12 +45,22 @@ public class Group implements JsonDeserializer<Group> {
     }
 
     // getContact and getContacts methods
+    public Person getContact(Float phone) {
+        for (Person contact : contacts) {
+            if (contact.getPhone().equals(phone)){
+                return contact;
+            }
+        }
+        return null;
+    }
     public Person getContact(int index) {
         return contacts.get(index);
     }
     public List<Person> getContacts() {
         return contacts;
     }
+    public String getGroupName() { return groupName; }
+    public String getFileName() { return fileName; }
 
     // conversion to JSON
     public JsonObject toJson () {

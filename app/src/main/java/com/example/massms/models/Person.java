@@ -52,6 +52,8 @@ public class Person implements JsonDeserializer<Person> {
 
     // get info functions
     public String getName() {
+        // We only use one name. So, if it is null we use first and last names.
+        // It depends how user defined cotact list
         if (this.name == null)
             this.name = this.firstName + " " + this.lastName;
         return this.name;
@@ -65,13 +67,9 @@ public class Person implements JsonDeserializer<Person> {
 
     @Override
     public String toString() {
-        // We only use one name. So, if it is null we use first and last names.
-        // It depends how user defined cotact list
-        if (this.name == null)
-            this.name = this.firstName + " " + this.lastName;
         String contactString = String.format(Locale.US, "%nName: %s%nPhone: %.0f%n"
-                , this.name
-                , this.phone);
+                , this.getName()
+                , this.getPhone());
 
         return contactString;
     }
@@ -93,17 +91,18 @@ public class Person implements JsonDeserializer<Person> {
 
         // get the key values
         Set<Map.Entry<String, JsonElement>> personObjects =  convertedGson.entrySet();
-        // Iterator i = personObjects.iterator();
 
         for (Map.Entry<String, JsonElement> entry : personObjects) {
             String key = entry.getKey();
             JsonElement personInfo  = entry.getValue();
 
+            // check if key values coinside with any possible values
             boolean containsFirst = Arrays.asList(possibleFirst).contains(key.toLowerCase());
             boolean containsLast = Arrays.asList(possibleLast).contains(key.toLowerCase());
             boolean containsName = Arrays.asList(possibleName).contains(key.toLowerCase());
             boolean containsPhone = Arrays.asList(possiblePhone).contains(key.toLowerCase());
 
+            // assign to corresponding variable
             if (containsFirst) {
                 newPerson.firstName = personInfo.getAsString();
             }
@@ -114,18 +113,13 @@ public class Person implements JsonDeserializer<Person> {
                 newPerson.name = personInfo.getAsString();
             }
             else if (containsPhone) {
+                // TODO: maybe there is a better condition
                 if (personInfo.getAsString().isEmpty()) {
                     return null;
                 }
                 newPerson.phone = personInfo.getAsFloat();
             }
         }
-
-        if (newPerson.getPhone() == null)
-        {
-            return null;
-        }
-
 
         return newPerson;
     }
