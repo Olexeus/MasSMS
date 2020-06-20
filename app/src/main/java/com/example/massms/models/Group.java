@@ -2,13 +2,21 @@ package com.example.massms.models;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class Group {
+public class Group implements JsonDeserializer<Group> {
     @SerializedName("groupName")
     private String groupName;
     @SerializedName("fileName")
@@ -51,90 +59,17 @@ public class Group {
         return convertedGson;
     }
 
+    // conversion from JSON
     public static Group fromJson (String convertJson) {
-        convertJson = "{\"Ward\":[{\"first\":\"Zach\",\"last\":\"Peterson\",\"phone\":9.132719504E9},{\"first\":\"Elder1\",\"last\":\"Smith\",\"phone\":5.551112222E9},{\"first\":\"Deacon1\",\"last\":\"Smith\",\"phone\":4.441113333E9}],\"groupName\":\"Smith\"}";
-        String JsonString = convertJson;
-        Gson gson = new GsonBuilder().registerTypeAdapter(Group.class, new CustomDeserializer()).create();
-        Group newGroup = null;
-
-        // 1: First Sloppy change of name
-        /*// Changes the first name in the String to the list of contacts
-        boolean nameChanged = false;
-        char current, previous;
-
-        // Create an array from string and loop through it
-        char[] JsonArray = JsonString.toCharArray();
-        JsonString = new String();
-        for (int i = 0; i < JsonArray.length; i++) {
-            current = JsonArray[i];
-            if (i >= 1 && i < 100) {
-                previous = JsonArray[i - 1];
-                if (previous == '{' && current == '\"' && nameChanged == false) {
-                    nameChanged = true;
-                    JsonString += (current + "contacts");
-                    do {
-                        i++;
-                    } while (JsonArray[i] != '\"');
-                }
-            }
-            JsonString += current;
-        }*/
-
-        // 2: Second Sloppy change of name
-        /*// convert string to JSONObject
-        JSONObject stringToJson = null;
-        try {
-            stringToJson = new JSONObject(convertJson);
-        } catch (JSONException e) {
-            Log.d("String to JSON", e.getMessage());
-        }
-        // get the key of contacts
-        Iterator<String> keys = stringToJson.keys();
-        String contactsKey = keys.next();
-        // get the value of contacts
-        JSONArray contacts = null;
-        try {
-            contacts = stringToJson.getJSONArray(contactsKey);
-        } catch (JSONException e) {
-            Log.d("Insert contacts", e.getMessage());
-        }
-        // remove contacts with random key
-        stringToJson.remove(contactsKey);
-        // insert contacts with needed key
-        try {
-            stringToJson.put("contacts", contacts);
-        } catch (JSONException e) {
-            Log.d("Insert contacts", e.getMessage());
-        }
-        JsonString = stringToJson.toString();
-*/
-
-        // 3: Thirst Sloppy solution
-        /*
-        JsonObject convertedGson = new Gson().fromJson(convertJson, JsonObject.class);
-        Set<Map.Entry<String, JsonElement>> groupObjects =  convertedGson.entrySet();
-        JsonArray jsonContacts = convertedGson.get(groupObjects.iterator().next().getKey()).getAsJsonArray();
-        // Set<Map.Entry<String, JsonElement>> listContacts = jsonContacts.entrySet();
-        List<Person> objectContacts = new ArrayList<>();
-        for (JsonElement entry : jsonContacts) {
-            JsonElement jsonElement  = entry;
-            Person contact = gson.fromJson(jsonElement, Person.class);
-            objectContacts.add(contact);
-        }
-        newGroup = new Group();
-        newGroup.addContacts(objectContacts);
-        newGroup.addName(convertedGson.remove("groupName").toString());*/
-
-
-
-        // Creates a new Group class
-        newGroup = gson.fromJson(JsonString, Group.class);
+        // convertJson = "{\"Ward\":[{\"first\":\"Zach\",\"last\":\"Peterson\",\"phone\":9.132719504E9},{\"first\":\"Elder1\",\"last\":\"Smith\",\"phone\":5.551112222E9},{\"first\":\"Deacon1\",\"last\":\"Smith\",\"phone\":4.441113333E9}],\"groupName\":\"Smith\"}";
+        Gson gson = new GsonBuilder().registerTypeAdapter(Group.class, new Group()).create();
+        Group newGroup  = gson.fromJson(convertJson, Group.class);
         return newGroup;
     }
 
     public static Group fromJson (JsonObject convertJson) {
-        String JsonString = convertJson.toString();
-        return Group.fromJson(JsonString);
+        Gson gson = new GsonBuilder().registerTypeAdapter(Group.class, new Group()).create();
+        return gson.fromJson(convertJson, Group.class);
     }
 
     // TODO: comparator
@@ -147,6 +82,45 @@ public class Group {
             groupString += c;
         }
         return groupString;
+    }
+
+    @Override
+    public Group deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+        // https://stackoverflow.com/questions/23472175/gson-deserializing-json-with-random-class-names
+        final JsonObject convertedGson = json.getAsJsonObject();
+        final Group newGroup = new Group();
+
+        // Check for group name and delete it
+        if (convertedGson.has("groupName")) {
+            final String groupName = convertedGson.get("groupName").getAsString();
+            convertedGson.remove("groupName");
+            newGroup.addName(groupName);
+        }
+        if (convertedGson.has("fileName")) {
+            // final String fileName = convertedGson.get("fileName").getAsString();
+            convertedGson.remove("fileName");
+        }
+
+        // get the key with contacts
+        Set<Map.Entry<String, JsonElement>> groupObjects =  convertedGson.entrySet();
+        // get Persons as JsonArray
+        JsonArray jsonContacts = convertedGson.get(groupObjects.iterator().next().getKey()).getAsJsonArray();
+
+        // Convert jsonContacts into Person objects
+        Gson gson = new GsonBuilder().registerTypeAdapter(Person.class, new Person()).create();
+        List<Person> objectContacts = new ArrayList<>();
+        for (JsonElement entry : jsonContacts) {
+            JsonElement jsonElement  = entry;
+            Person contact = gson.fromJson(jsonElement, Person.class);
+            if (contact != null) {
+                objectContacts.add(contact);
+            }
+        }
+
+        // add converted data
+        newGroup.addContacts(objectContacts);
+
+        return newGroup;
     }
 
 }

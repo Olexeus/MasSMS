@@ -54,7 +54,7 @@ public class ImportPresenter implements ImportContract.Presenter {
                     timings.dumpToLog();
                     // Creates a new Group class
 
-                    Group newGroup = Group.fromJson(MainActivity.excelJsonObject.toString());
+                    Group newGroup = Group.fromJson(MainActivity.excelJsonObject);
                     newGroup.addName("Team 1");
                     Log.d("Group object", newGroup.toString());
 
