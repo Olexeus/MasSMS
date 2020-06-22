@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.massms.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 public class ImportFragment extends Fragment implements ImportContract.View {
     private ImportContract.Presenter presenter;
@@ -24,20 +26,22 @@ public class ImportFragment extends Fragment implements ImportContract.View {
         setPresenter(new ImportPresenter(this));
         presenter.onViewCreated();
 
+        importGroup();
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first, container, false);
+        return inflater.inflate(R.layout.import_fragment, container, false);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Still not sure whether this kind of stuff belongs here or the next method.
-        importButton = view.findViewById(R.id.import_btn);
+        Button finish = view.findViewById(R.id.finish);
 
-        importButton.setOnClickListener(new View.OnClickListener() {
+        finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                importGroup();
+                NavHostFragment.findNavController(ImportFragment.this)
+                        .navigate(R.id.action_import_to_list);
             }
         });
     }
@@ -51,8 +55,6 @@ public class ImportFragment extends Fragment implements ImportContract.View {
                 // Not sure if this should be where this is called
                 presenter.convertExcelToJson(data, getContext());
 
-                NavHostFragment.findNavController(ImportFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
             }
         } catch (Exception ex) {
             Toast.makeText(getActivity(), ex.toString(), Toast.LENGTH_SHORT).show();

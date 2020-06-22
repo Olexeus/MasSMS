@@ -36,15 +36,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         // Store a reference to the presenter just after creating it.
         setPresenter(new MainPresenter(this));
         presenter.onViewCreated();
