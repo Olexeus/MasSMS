@@ -51,6 +51,13 @@ public class ListFragment extends Fragment implements ListContract.View {
             }
         });
 
+        groupList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ListFragment.this.startActivity(new Intent(getActivity(), SendMessage.class));
+            }
+        });
+
     }
 
     @Override
