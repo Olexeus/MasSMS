@@ -26,7 +26,7 @@ public class ImportPresenter implements ImportContract.Presenter {
     private static final String TAG = "ImportPresenter";
 
     // Constructor takes in a view, along with any other dependencies
-    public ImportPresenter(ImportContract.View view) {
+    ImportPresenter(ImportContract.View view) {
         this.view = view;
     }
 
@@ -36,7 +36,7 @@ public class ImportPresenter implements ImportContract.Presenter {
     }
 
     @Override
-    public void convertExcelToJson(final Intent data, final Context context) {
+    public void convertExcelToJson(final Intent data, final Context context, final String groupName) {
         // TODO: Clean this up.
         Thread ExcelToJsonThread = new Thread(new Runnable() {
             @Override
@@ -55,7 +55,7 @@ public class ImportPresenter implements ImportContract.Presenter {
                     // Creates a new Group class
 
                     Group newGroup = Group.fromJson(MainActivity.excelJsonObject);
-                    newGroup.addName("Team 1");
+                    newGroup.addName(groupName);
                     Log.d("Group object", newGroup.toString());
 
                 } catch (IOException e) {

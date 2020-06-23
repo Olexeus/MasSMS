@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class ImportFragment extends Fragment implements ImportContract.View {
     private ImportContract.Presenter presenter;
+    private String groupName;
     private Button importButton;
 
     @Override
@@ -26,8 +28,6 @@ public class ImportFragment extends Fragment implements ImportContract.View {
         setPresenter(new ImportPresenter(this));
         presenter.onViewCreated();
 
-        importGroup();
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.import_fragment, container, false);
     }
@@ -35,15 +35,22 @@ public class ImportFragment extends Fragment implements ImportContract.View {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        EditText editText = view.findViewById(R.id.editText);
         Button finish = view.findViewById(R.id.finish);
 
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(ImportFragment.this)
-                        .navigate(R.id.action_import_to_list);
+                importGroup();
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EditText editText = getView().findViewById(R.id.editText);
+        groupName = editText.getText().toString();
     }
 
     @Override
@@ -53,7 +60,9 @@ public class ImportFragment extends Fragment implements ImportContract.View {
 
             if (requestCode == 1 && resultCode == -1) {
                 // Not sure if this should be where this is called
-                presenter.convertExcelToJson(data, getContext());
+                presenter.convertExcelToJson(data, getContext(), groupName);
+                NavHostFragment.findNavController(ImportFragment.this)
+                        .navigate(R.id.action_import_to_list);
 
             }
         } catch (Exception ex) {
@@ -82,7 +91,6 @@ public class ImportFragment extends Fragment implements ImportContract.View {
     private Intent createImportIntent() {
         Intent intent;
         intent = new Intent(Intent.ACTION_GET_CONTENT);
-
         String[] mimeTypes = { "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
