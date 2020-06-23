@@ -10,9 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.massms.R;
+import com.example.massms.models.Group;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 /**
  * Remember that the view should be as dumb as possible.
@@ -23,6 +26,9 @@ import com.google.gson.JsonObject;
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     // TODO: Move Data.java Stuff to a model
     public static JsonObject excelJsonObject = null;
+
+    // TODO: When we finish with the DataManager, we need to decouple this from ImportPresenter
+    public static Group group;
 
     // Add a presenter property. The view needs the presenter to invoke user initiated callbacks.
     private MainContract.Presenter presenter;

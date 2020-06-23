@@ -12,6 +12,7 @@
     <string name="import_contacts">Import New Group</string>
     <string name="import_button">Import</string>
     <string name="get_started">Click the \"+\" button to get started</string>
+    <string name="add_more">"Click the \"+\" to add more groups"</string>
     <string name="finish">Import</string>
     <string name="name_prompt">Enter a group name</string>
 </resources>

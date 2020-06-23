@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.util.TimingLogger;
+import android.view.View;
 
+import com.example.massms.R;
 import com.example.massms.models.Group;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -33,6 +35,7 @@ public class ImportPresenter implements ImportContract.Presenter {
     // Called by the view when it is created
     @Override
     public void onViewCreated() {
+
     }
 
     @Override
@@ -56,6 +59,7 @@ public class ImportPresenter implements ImportContract.Presenter {
 
                     Group newGroup = Group.fromJson(MainActivity.excelJsonObject);
                     newGroup.addName(groupName);
+                    MainActivity.group = newGroup;
                     Log.d("Group object", newGroup.toString());
 
                 } catch (IOException e) {

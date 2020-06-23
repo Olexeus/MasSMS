@@ -61,6 +61,8 @@ public class ImportFragment extends Fragment implements ImportContract.View {
             if (requestCode == 1 && resultCode == -1) {
                 // Not sure if this should be where this is called
                 presenter.convertExcelToJson(data, getContext(), groupName);
+                ListFragment.groupListString = MainActivity.group.getGroupName();
+                ListFragment.startingTextString = getString(R.string.add_more);
                 NavHostFragment.findNavController(ImportFragment.this)
                         .navigate(R.id.action_import_to_list);
 
