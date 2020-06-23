@@ -13,6 +13,7 @@ public interface ImportContract {
         // This is called in the Activity's or Fragment's onCreate method.
         void onViewCreated();
         void convertExcelToJson(final Intent data, final Context context, final String groupName);
+        Intent createImportIntent();
     }
 
     interface View extends BaseView<Presenter> {

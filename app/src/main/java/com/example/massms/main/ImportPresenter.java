@@ -122,4 +122,15 @@ public class ImportPresenter implements ImportContract.Presenter {
         }
         return sheetsJsonObject;
     }
+
+    @Override
+    public Intent createImportIntent() {
+        Intent intent;
+        intent = new Intent(Intent.ACTION_GET_CONTENT);
+        String[] mimeTypes = { "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        return intent;
+    }
 }

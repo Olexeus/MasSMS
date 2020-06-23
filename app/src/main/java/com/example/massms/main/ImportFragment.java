@@ -83,19 +83,7 @@ public class ImportFragment extends Fragment implements ImportContract.View {
     }
 
     private void importGroup() {
-        Intent intent = createImportIntent();
+        Intent intent = presenter.createImportIntent();
         startActivityForResult(Intent.createChooser(intent, "ChooseFile"), 1);
-    }
-
-    // this intent stuff probably stays in the view
-    private Intent createImportIntent() {
-        Intent intent;
-        intent = new Intent(Intent.ACTION_GET_CONTENT);
-        String[] mimeTypes = { "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        return intent;
     }
 }
