@@ -15,4 +15,6 @@
     <string name="add_more">"Click the \"+\" to add more groups"</string>
     <string name="finish">Import</string>
     <string name="name_prompt">Enter a group name</string>
+    <string name="compose">Compose Message</string>
+    <string name="send">Send</string>
 </resources>

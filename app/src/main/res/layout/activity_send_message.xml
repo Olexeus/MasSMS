@@ -6,4 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".main.SendMessage">
 
+    <EditText
+        android:id="@+id/message_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/compose"
+        android:inputType="textCapSentences|textImeMultiLine|textLongMessage"
+        android:maxLength="2000"
+        app:layout_constraintEnd_toStartOf="@+id/send"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="message" />
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/send"
+        app:layout_constraintBaseline_toBaselineOf="@+id/message_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/message_view" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
