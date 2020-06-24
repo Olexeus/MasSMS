@@ -26,7 +26,7 @@ public class Person implements JsonDeserializer<Person> {
     private String name;
 
     @SerializedName("phone")
-    private Float phone;
+    private Double phone;
 
     public Person() {
         firstName = null;
@@ -36,14 +36,14 @@ public class Person implements JsonDeserializer<Person> {
     }
 
     // non-default constructors
-    public Person(String newName, Float newPhone) {
+    public Person(String newName, Double newPhone) {
         firstName = null;
         lastName = null;
         name = newName;
         phone = newPhone;
     }
 
-    public Person(String newFirst, String newLast, Float newPhone) {
+    public Person(String newFirst, String newLast, Double newPhone) {
         firstName = newFirst;
         lastName = newLast;
         name = firstName + " " + lastName;
@@ -59,7 +59,7 @@ public class Person implements JsonDeserializer<Person> {
         return this.name;
     }
 
-    public Float getPhone() {
+    public Double getPhone() {
         return this.phone;
     }
 
@@ -117,7 +117,7 @@ public class Person implements JsonDeserializer<Person> {
                 if (personInfo.getAsString().isEmpty()) {
                     return null;
                 }
-                newPerson.phone = personInfo.getAsFloat();
+                newPerson.phone = personInfo.getAsDouble();
             }
         }
 

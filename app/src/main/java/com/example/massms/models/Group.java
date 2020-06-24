@@ -45,7 +45,7 @@ public class Group implements JsonDeserializer<Group> {
     }
 
     // getContact and getContacts methods
-    public Person getContact(Float phone) {
+    public Person getContact(Double phone) {
         for (Person contact : contacts) {
             if (contact.getPhone().equals(phone)){
                 return contact;
