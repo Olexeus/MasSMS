@@ -3,12 +3,15 @@ package com.example.massms.main;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.massms.models.Group;
+
+import java.math.BigDecimal;
 
 public class SendPresenter implements SendContract.Presenter {
     private SendContract.View view;
@@ -20,7 +23,7 @@ public class SendPresenter implements SendContract.Presenter {
         // TODO: Add logic to split message up if it's longer than 160 chars
         for(int i = 0; i < MainActivity.group.getContacts().size(); i++)
         {
-            String phoneNumber = MainActivity.group.getContact(i).getPhone().toString();
+            String phoneNumber = (new BigDecimal(MainActivity.group.getContact(i).getPhone())).toString();
 
             if(phoneNumber.length() == 0 || message.length() == 0){
                 Log.d("Blank values", phoneNumber + " " + message);
@@ -28,12 +31,11 @@ public class SendPresenter implements SendContract.Presenter {
             }
 
             if(checkPermission(context)){
-                // TODO: The numbers aren't being converted right
-                Log.d("Sending Message", "Sending to " + phoneNumber + " and message "
+
+                Log.d("Sending Message", "Sending to: " + phoneNumber + " and message: "
                         + message);
-                //SmsManager smsManager = SmsManager.getDefault();
-                //smsManager.sendTextMessage(phoneNumber, null, smsMessage, null, null);
-                //Toast.makeText(this, i + ") Message Sent!", Toast.LENGTH_SHORT).show();
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(phoneNumber, null, message, null, null);
             }else{
                 Log.d("Permission Denied", "DENIED");
             }
