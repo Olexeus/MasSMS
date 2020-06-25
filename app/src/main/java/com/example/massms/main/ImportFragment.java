@@ -2,11 +2,14 @@ package com.example.massms.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,6 +45,29 @@ public class ImportFragment extends Fragment implements ImportContract.View {
         finish.setVisibility(View.INVISIBLE);
 
         importGroup();
+
+        ((EditText)view.findViewById(R.id.editText)).setOnEditorActionListener(
+                new EditText.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                                actionId == EditorInfo.IME_ACTION_DONE ||
+                                event != null &&
+                                        event.getAction() == KeyEvent.ACTION_DOWN &&
+                                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                            if (event == null || !event.isShiftPressed()) {
+                                ListFragment.groupListString = editText.getText().toString();
+                                MainActivity.group.addName(editText.getText().toString());
+                                ListFragment.startingTextString = getString(R.string.add_more);
+                                NavHostFragment.findNavController(ImportFragment.this)
+                                        .navigate(R.id.action_import_to_list);
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                }
+        );
 
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
