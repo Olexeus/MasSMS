@@ -39,7 +39,7 @@ public class ImportPresenter implements ImportContract.Presenter {
     }
 
     @Override
-    public void convertExcelToJson(final Intent data, final Context context, final String groupName) {
+    public void convertExcelToJson(final Intent data, final Context context) {
         // TODO: Clean this up.
         Thread ExcelToJsonThread = new Thread(new Runnable() {
             @Override
@@ -55,10 +55,10 @@ public class ImportPresenter implements ImportContract.Presenter {
                     Log.d("First Fragment", MainActivity.excelJsonObject.toString());
                     timings.addSplit("Excel to JSON");
                     timings.dumpToLog();
-                    // Creates a new Group class
 
+                    // Creates a new Group class
                     Group newGroup = Group.fromJson(MainActivity.excelJsonObject);
-                    newGroup.addName(groupName);
+                    newGroup.addName("newGroup");
                     MainActivity.group = newGroup;
                     Log.d("Group object", newGroup.toString());
 

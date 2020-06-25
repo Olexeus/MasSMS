@@ -12,7 +12,7 @@ public interface ImportContract {
     interface Presenter extends BasePresenter {
         // This is called in the Activity's or Fragment's onCreate method.
         void onViewCreated();
-        void convertExcelToJson(final Intent data, final Context context, final String groupName);
+        void convertExcelToJson(final Intent data, final Context context);
         Intent createImportIntent();
     }
 

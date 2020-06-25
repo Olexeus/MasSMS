@@ -35,13 +35,22 @@ public class ImportFragment extends Fragment implements ImportContract.View {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        EditText editText = view.findViewById(R.id.editText);
+        final EditText editText = view.findViewById(R.id.editText);
         Button finish = view.findViewById(R.id.finish);
+
+        editText.setVisibility(View.INVISIBLE);
+        finish.setVisibility(View.INVISIBLE);
+
+        importGroup();
 
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                importGroup();
+                ListFragment.groupListString = editText.getText().toString();
+                MainActivity.group.addName(editText.getText().toString());
+                ListFragment.startingTextString = getString(R.string.add_more);
+                NavHostFragment.findNavController(ImportFragment.this)
+                        .navigate(R.id.action_import_to_list);
             }
         });
     }
@@ -58,14 +67,15 @@ public class ImportFragment extends Fragment implements ImportContract.View {
         try {
             super.onActivityResult(requestCode, resultCode, data);
 
+            EditText editText = getView().findViewById(R.id.editText);
+            Button finish = getView().findViewById(R.id.finish);
+
+            editText.setVisibility(View.VISIBLE);
+            finish.setVisibility(View.VISIBLE);
+
             if (requestCode == 1 && resultCode == -1) {
                 // Not sure if this should be where this is called
-                presenter.convertExcelToJson(data, getContext(), groupName);
-                ListFragment.groupListString = MainActivity.group.getGroupName();
-                ListFragment.startingTextString = getString(R.string.add_more);
-                NavHostFragment.findNavController(ImportFragment.this)
-                        .navigate(R.id.action_import_to_list);
-
+                presenter.convertExcelToJson(data, getContext());
             }
         } catch (Exception ex) {
             Toast.makeText(getActivity(), ex.toString(), Toast.LENGTH_SHORT).show();
