@@ -5,6 +5,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 
+import com.google.gson.JsonObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +18,11 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class DataManager{
     String fileName = "masssms";
+    Context context;
+
+    public DataManager(Context context){
+        this.context = context;
+    }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public void createDirectory(Context context) {
@@ -35,7 +42,8 @@ public class DataManager{
         try {
             fis = context.openFileInput(fileName);
             scanner = new Scanner(fis);
-            scanner.useDelimiter("\\Z");
+            //A delimiter is most likely not going to be necessary.
+            //scanner.useDelimiter("\\Z");
             String content = scanner.next();
         }catch (FileNotFoundException e){
             e.printStackTrace();
@@ -45,12 +53,13 @@ public class DataManager{
 
         scanner.close();
     }
-   /* public void writeToFile(Context context, internalStorageBinding) {
+    public void writeToFile(Context context, JsonObject internalStorageBinding) {
+
         FileOutputStream fos = null;
         //openFileOutput writes data to internal storage.
         try {
             fos = context.openFileOutput(fileName, MODE_PRIVATE);
-            fos.write(internalStorageBinding.saveFileEditText.getText().toString().getBytes());
+            fos.write(internalStorageBinding.toString().getBytes());
         }catch (FileNotFoundException e){
             e.printStackTrace();
         }catch (IOException e){
@@ -65,6 +74,6 @@ public class DataManager{
             }
         }
 
-    }/*/
+    }
 
 }
