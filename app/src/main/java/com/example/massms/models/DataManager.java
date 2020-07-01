@@ -1,4 +1,4 @@
-package com.example.massms;
+package com.example.massms.models;
 
 
 import android.annotation.TargetApi;
@@ -8,7 +8,6 @@ import android.os.Build;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
