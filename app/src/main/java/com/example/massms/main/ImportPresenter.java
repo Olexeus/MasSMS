@@ -5,10 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.util.TimingLogger;
-import android.view.View;
 
-import com.example.massms.R;
 import com.example.massms.models.Group;
+import com.example.massms.models.GroupManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -57,9 +56,13 @@ public class ImportPresenter implements ImportContract.Presenter {
                     timings.dumpToLog();
 
                     // Creates a new Group class
+                    // TODO: sort out this mess
                     Group newGroup = Group.fromJson(MainActivity.excelJsonObject);
                     newGroup.addName("newGroup");
                     MainActivity.group = newGroup;
+                    GroupManager.addGroup(newGroup);
+                    GroupManager groupManager = new GroupManager();
+                    groupManager.saveGroups();
                     Log.d("Group object", newGroup.toString());
 
                 } catch (IOException e) {

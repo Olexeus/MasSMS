@@ -5,8 +5,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 
-import com.google.gson.JsonObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,7 +23,7 @@ public class DataManager{
     }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    public void createDirectory(Context context) {
+    public void createDirectory() {
         File directory;
         if (fileName.isEmpty()) {
             directory = context.getFilesDir();
@@ -35,31 +33,40 @@ public class DataManager{
         File[] files = directory.listFiles();
     }
 
-    public void readFile(Context context){
+    public String readFile(){
+        /*Thread readMemory = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, "Internal Memory Read Thread");*/
         //openFileInput reads data from internal storage.
         FileInputStream fis = null;
         Scanner scanner = null;
+        String content = null;
         try {
             fis = context.openFileInput(fileName);
             scanner = new Scanner(fis);
             //A delimiter is most likely not going to be necessary.
             //scanner.useDelimiter("\\Z");
-            String content = scanner.next();
+            content = scanner.next();
+            scanner.close();
         }catch (FileNotFoundException e){
             e.printStackTrace();
         }catch (IOException e){
             e.printStackTrace();
         }
 
-        scanner.close();
+
+        return content;
     }
-    public void writeToFile(Context context, JsonObject internalStorageBinding) {
+    public void writeToFile(String internalStorageBinding) {
 
         FileOutputStream fos = null;
         //openFileOutput writes data to internal storage.
         try {
             fos = context.openFileOutput(fileName, MODE_PRIVATE);
-            fos.write(internalStorageBinding.toString().getBytes());
+            fos.write(internalStorageBinding.getBytes());
         }catch (FileNotFoundException e){
             e.printStackTrace();
         }catch (IOException e){

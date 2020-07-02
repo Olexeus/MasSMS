@@ -3,7 +3,6 @@ package com.example.massms.main;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,8 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.massms.R;
 import com.example.massms.models.Group;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.massms.models.GroupManager;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -45,6 +43,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         // Store a reference to the presenter just after creating it.
         setPresenter(new MainPresenter(this));
         presenter.onViewCreated();
+
+        // Instantiate GroupManager
+        GroupManager groupManager = new GroupManager(this.getApplicationContext());
+        groupManager.retrieveGroups();
+        List<Group> contacts = groupManager.getGroups();
     }
 
     @Override
