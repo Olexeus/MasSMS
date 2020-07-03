@@ -63,7 +63,7 @@ public class ListFragment extends Fragment implements ListContract.View {
         if(!groupListString.equals("0")){
             groupList.setVisibility(View.VISIBLE);
             // Testing DataManager
-            groupList.setText(GroupManager.getGroups().get(0).getGroupName());
+            groupList.setText(GroupManager.getGroups().get(GroupManager.getSize() - 1).getGroupName());
             startingText.setText(R.string.add_more);
         }
 

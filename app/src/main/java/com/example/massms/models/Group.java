@@ -29,6 +29,10 @@ public class Group implements JsonDeserializer<Group> {
         contacts = new ArrayList<>();
     }
 
+    public boolean empty() {
+        return contacts.isEmpty();
+    }
+
     public void addName(String newGroupName) {
         this.groupName = newGroupName;
         this.fileName = this.groupName.replaceAll(" ", "_").toLowerCase();
@@ -63,9 +67,9 @@ public class Group implements JsonDeserializer<Group> {
     public String getFileName() { return fileName; }
 
     // conversion to JSON
-    public JsonObject toJson () {
+    public static JsonObject toJson (Group group) {
         Gson gson = new Gson();
-        JsonObject convertedGson = new Gson().fromJson(gson.toJson(this), JsonObject.class);
+        JsonObject convertedGson = gson.fromJson(gson.toJson(group), JsonObject.class);
         return convertedGson;
     }
 

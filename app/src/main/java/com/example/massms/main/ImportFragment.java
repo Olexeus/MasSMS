@@ -17,8 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.massms.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.massms.models.GroupManager;
 
 public class ImportFragment extends Fragment implements ImportContract.View {
     private ImportContract.Presenter presenter;
@@ -57,7 +56,7 @@ public class ImportFragment extends Fragment implements ImportContract.View {
                                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                             if (event == null || !event.isShiftPressed()) {
                                 ListFragment.groupListString = editText.getText().toString();
-                                MainActivity.group.addName(editText.getText().toString());
+                                GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
                                 ListFragment.startingTextString = getString(R.string.add_more);
                                 NavHostFragment.findNavController(ImportFragment.this)
                                         .navigate(R.id.action_import_to_list);
@@ -73,7 +72,10 @@ public class ImportFragment extends Fragment implements ImportContract.View {
             @Override
             public void onClick(View view) {
                 ListFragment.groupListString = editText.getText().toString();
-                MainActivity.group.addName(editText.getText().toString());
+                // TODO: Testing GroupManager
+                // TODO: Check if thread is finished and then add name
+                GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
+                GroupManager.saveGroups();
                 ListFragment.startingTextString = getString(R.string.add_more);
                 NavHostFragment.findNavController(ImportFragment.this)
                         .navigate(R.id.action_import_to_list);

@@ -4,27 +4,30 @@ import android.content.Context;
 
 import com.example.massms.main.ListContract;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class GroupManager{
     ListContract.View view;
-    private static List<Group> groups = null;
+    private static List<Group> groups = new ArrayList<Group>();
     private static Context context;
+    private static DataManager dataManager;
+    private static final Gson gson = new Gson();
 
     // Constructor takes in a view, along with any other dependencies
-    public GroupManager() {
-    }
-    public GroupManager(Context context) {
+    public GroupManager(@org.jetbrains.annotations.NotNull Context context) {
         GroupManager.context = context;
-        if (groups == null) {
+        GroupManager.dataManager = new DataManager(GroupManager.context);
+        if (groups.isEmpty()) {  // if groups are not defined retrieveGroups is called
+            // it is not really singleton, but works only if defined in the main
+            // and does not need to be redefined
             GroupManager.retrieveGroups();
-            if (groups == null) {
-                GroupManager.groups = new ArrayList<Group>();
-            }
         }
-        // this.groups = new ArrayList<Group>();
     }
 
     // getters
@@ -32,12 +35,11 @@ public class GroupManager{
         return groups;
     }
 
+    public static int getSize() { return groups.size(); }
+
     public static Group getGroup(String name) {
         // TODO: needs testing
         int groupIndex = GroupManager.findGroup(name);
-        /*if (groups.size() > groupIndex) {
-            return groups.get(groupIndex);
-        }*/
         if (groupIndex != -1) {
             return groups.get(groupIndex);
         }
@@ -45,9 +47,6 @@ public class GroupManager{
     }
 
     public static int findGroup(String name) {
-        if (groups == null) {
-            GroupManager.retrieveGroups();
-        }
         for (Group group : groups) {
             if (group.getFileName().equals(name) || group.getGroupName().equals(name)){
                 return groups.indexOf(group);
@@ -58,65 +57,54 @@ public class GroupManager{
 
     // setters
     public static void addGroup(Group newGroup) {
-        if (groups == null) {
-            GroupManager.retrieveGroups();
-            if (groups == null) {
-                GroupManager.groups = new ArrayList<Group>();
-            }
-        }
-        GroupManager.groups = new ArrayList<Group>();
         groups.add(newGroup);
     }
 
     public static void addGroups(List<Group> newGroups) {
-        if (groups == null) {
-            GroupManager.retrieveGroups();
-            if (groups == null) {
-                GroupManager.groups = new ArrayList<Group>();
-            }
-        }
         groups.addAll(newGroups);
     }
 
     // interact with memory
-    public void deleteGroup(String name) {
-        // TODO: delete group even in local memory
+    public static void deleteGroup(String name) {
+        // delete group even in local memory
+        GroupManager.deleteGroup(GroupManager.findGroup(name));
+    }
+
+    public static void deleteGroup(int index) {
+        // delete group even in local memory
         // TODO: needs testing
-        groups.remove(GroupManager.getGroup(name));
+        if (index < GroupManager.getSize() && index >= 0) {
+            groups.remove(index);
+        }
+        GroupManager.saveGroups();
     }
 
-    public void saveGroups() {
-        // TODO: Create JsonObject and append Groups.toJson. Then convert and save
+    public static void saveGroups() {
+        // Create JsonObject and append Groups.toJson. Then convert and save
         // do the same for retrieveGroups
-        DataManager dataManager = new DataManager(GroupManager.context);
-        Gson gson = new Gson();
-        dataManager.writeToFile(gson.toJson(this));
-
-        /*DataManager dataManager = new DataManager(GroupManager.context);
-        groups = new ArrayList<Group>();
         List<JsonObject> groupClasses = new ArrayList<JsonObject>();
-        Gson gson = new Gson();
         for (Group g: groups) {
-            groupClasses.add(g.toJson());
+            groupClasses.add(Group.toJson(g));
         }
-        dataManager.writeToFile(gson.toJson(groupClasses));*/
+        dataManager.writeToFile(gson.toJson(groupClasses));
     }
 
-    public static void retrieveGroups() {
-        // this.groups = new ArrayList<Group>();
+    private static void retrieveGroups() {
+        GroupManager.groups = new ArrayList<Group>();
         if (GroupManager.context != null) {
-            DataManager dataManager = new DataManager(GroupManager.context);
             String fileData = dataManager.readFile();
-            Gson gson = new Gson();
-            GroupManager groupManager = gson.fromJson(fileData, GroupManager.class);
-            // this.groups = groupManager.getGroups();
+            // data was saved as the JsonArray
+            JsonArray groupClasses = gson.fromJson(fileData, JsonArray.class);
+            // iterate through every JsonElement and convert it into Group object
+            Iterator<JsonElement> it = groupClasses.iterator();
+            while (it.hasNext()) {
+                JsonElement groupElement = it.next();
+                Group newGroup = Group.fromJson(groupElement.getAsJsonObject());
+                // add group only if it is not empty
+                if (!newGroup.empty()) {
+                    groups.add(newGroup);
+                }
+            }
         }
-        /*if (GroupManager.context != null) {
-            DataManager dataManager = new DataManager(GroupManager.context);
-            String fileData = dataManager.readFile();
-            Gson gson = new Gson();
-            JsonObject groupClasses = gson.fromJson(fileData, JsonObject.class);
-
-        }*/
     }
 }

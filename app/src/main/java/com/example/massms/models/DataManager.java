@@ -34,12 +34,6 @@ public class DataManager{
     }
 
     public String readFile(){
-        /*Thread readMemory = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }, "Internal Memory Read Thread");*/
         //openFileInput reads data from internal storage.
         FileInputStream fis = null;
         Scanner scanner = null;
@@ -49,29 +43,34 @@ public class DataManager{
             scanner = new Scanner(fis);
             //A delimiter is most likely not going to be necessary.
             //scanner.useDelimiter("\\Z");
-            content = scanner.next();
+            String nextChar = null;
+            while (scanner.hasNext()) {
+                nextChar = scanner.next();
+                if (content != null) {
+                    content += nextChar;
+                }
+                else {
+                    content = nextChar;
+                }
+            }
             scanner.close();
         }catch (FileNotFoundException e){
             e.printStackTrace();
-        }catch (IOException e){
-            e.printStackTrace();
         }
-
-
         return content;
     }
-    public void writeToFile(String internalStorageBinding) {
 
+    public void writeToFile(@org.jetbrains.annotations.NotNull String internalStorageBinding) {
         FileOutputStream fos = null;
         //openFileOutput writes data to internal storage.
         try {
-            fos = context.openFileOutput(fileName, MODE_PRIVATE);
+            fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             fos.write(internalStorageBinding.getBytes());
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e){
             e.printStackTrace();
-        }catch (IOException e){
+        } catch (IOException e){
             e.printStackTrace();
-        }finally {
+        } finally {
             if (fos != null){
                 try{
                     fos.close();

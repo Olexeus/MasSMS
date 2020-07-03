@@ -53,16 +53,13 @@ public class ImportPresenter implements ImportContract.Presenter {
                     MainActivity.excelJsonObject = getExcelDataAsJsonObject(inputStream);
                     Log.d("First Fragment", MainActivity.excelJsonObject.toString());
                     timings.addSplit("Excel to JSON");
-                    timings.dumpToLog();
 
                     // Creates a new Group class
                     // TODO: sort out this mess
                     Group newGroup = Group.fromJson(MainActivity.excelJsonObject);
-                    newGroup.addName("newGroup");
-                    MainActivity.group = newGroup;
                     GroupManager.addGroup(newGroup);
-                    GroupManager groupManager = new GroupManager();
-                    groupManager.saveGroups();
+                    timings.addSplit("JSON to Object");
+                    timings.dumpToLog();
                     Log.d("Group object", newGroup.toString());
 
                 } catch (IOException e) {

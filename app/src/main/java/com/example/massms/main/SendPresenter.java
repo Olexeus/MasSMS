@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.massms.models.Group;
+import com.example.massms.models.GroupManager;
 
 import java.math.BigDecimal;
 
@@ -21,9 +21,9 @@ public class SendPresenter implements SendContract.Presenter {
     @Override
     public void sendMessage(String message, Group group, Context context) {
         // TODO: Add logic to split message up if it's longer than 160 chars
-        for(int i = 0; i < MainActivity.group.getContacts().size(); i++)
+        for(int i = 0; i < GroupManager.getGroups().get(GroupManager.getSize() - 1).getContacts().size(); i++)
         {
-            String phoneNumber = (new BigDecimal(MainActivity.group.getContact(i).getPhone())).toString();
+            String phoneNumber = (new BigDecimal(GroupManager.getGroups().get(GroupManager.getSize() - 1).getContact(i).getPhone())).toString();
 
             if(phoneNumber.length() == 0 || message.length() == 0){
                 Log.d("Blank values", phoneNumber + " " + message);

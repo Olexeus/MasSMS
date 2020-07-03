@@ -9,11 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.massms.R;
-import com.example.massms.models.Group;
 import com.example.massms.models.GroupManager;
 import com.google.gson.JsonObject;
-
-import java.util.List;
 
 /**
  * Remember that the view should be as dumb as possible.
@@ -24,9 +21,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     // TODO: Move Data.java Stuff to a model
     public static JsonObject excelJsonObject = null;
-
-    // TODO: When we finish with the DataManager, we need to decouple this from ImportPresenter
-    public static Group group;
 
     // Add a presenter property. The view needs the presenter to invoke user initiated callbacks.
     private MainContract.Presenter presenter;
@@ -45,9 +39,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         presenter.onViewCreated();
 
         // Instantiate GroupManager
-        GroupManager groupManager = new GroupManager(this.getApplicationContext());
-        groupManager.retrieveGroups();
-        List<Group> contacts = groupManager.getGroups();
+        // Most of classes are static. We just need to instantiate it once in the MainActivity
+        // Otherwise it will not work properly
+        new GroupManager(this.getApplicationContext());
     }
 
     @Override

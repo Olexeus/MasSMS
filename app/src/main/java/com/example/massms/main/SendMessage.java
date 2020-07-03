@@ -1,15 +1,8 @@
 package com.example.massms.main;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,8 +10,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.example.massms.R;
-import com.example.massms.models.Group;
+import com.example.massms.models.GroupManager;
 import com.example.massms.models.Person;
 
 public class SendMessage extends AppCompatActivity implements SendContract.View {
@@ -46,13 +43,13 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
         }
 
         ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, MainActivity.group.getContacts());
+                android.R.layout.simple_list_item_1, GroupManager.getGroups().get(GroupManager.getSize() - 1).getContacts());
         listView.setAdapter(itemsAdapter);
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.sendMessage(messageView.getText().toString(), MainActivity.group, getApplicationContext());
+                presenter.sendMessage(messageView.getText().toString(), GroupManager.getGroups().get(GroupManager.getSize() - 1), getApplicationContext());
                 messageView.getText().clear();
                 Toast.makeText(getApplicationContext(), "Message sent", Toast.LENGTH_SHORT).show();
             }
