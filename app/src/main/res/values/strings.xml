@@ -17,4 +17,5 @@
     <string name="name_prompt">Enter a group name</string>
     <string name="compose">Compose Message</string>
     <string name="send">Send</string>
+    <string name="delete_group">Delete Group</string>
 </resources>

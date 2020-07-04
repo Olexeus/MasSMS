@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,15 +15,21 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.massms.R;
+import com.example.massms.models.Group;
 import com.example.massms.models.GroupManager;
+import com.example.massms.models.Person;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListFragment extends Fragment implements ListContract.View {
     private ListContract.Presenter presenter;
-    public static String groupListString = "0";
+    private String groupListString = "0";
     public static String startingTextString = "0";
-    TextView groupList;
-    TextView startingText;
+    private ListView groupList;
+    private TextView startingText;
+    private List<String> groupNames;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,10 +57,12 @@ public class ListFragment extends Fragment implements ListContract.View {
             }
         });
 
-        groupList.setOnClickListener(new View.OnClickListener() {
+        groupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                ListFragment.this.startActivity(new Intent(getActivity(), SendMessage.class));
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), SendMessage.class);
+                intent.putExtra("Group", groupNames.get(position));
+                ListFragment.this.startActivity(intent);
             }
         });
 
@@ -60,11 +71,16 @@ public class ListFragment extends Fragment implements ListContract.View {
     @Override
     public void onResume(){
         super.onResume();
-        if(!groupListString.equals("0")){
+        if(GroupManager.getSize() != 0){
             groupList.setVisibility(View.VISIBLE);
-            // Testing DataManager
-            groupList.setText(GroupManager.getGroups().get(GroupManager.getSize() - 1).getGroupName());
-            startingText.setText(R.string.add_more);
+            groupNames = new ArrayList<>();
+            for(int i = 0; i < GroupManager.getSize(); i++){
+                groupNames.add(GroupManager.getGroups().get(i).getGroupName());
+            }
+            ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_list_item_1, groupNames);
+            groupList.setAdapter(itemsAdapter);
+            startingText.setVisibility(View.INVISIBLE);
         }
 
 

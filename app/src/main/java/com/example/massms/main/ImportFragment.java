@@ -55,9 +55,8 @@ public class ImportFragment extends Fragment implements ImportContract.View {
                                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                             if (event == null || !event.isShiftPressed()) {
-                                ListFragment.groupListString = editText.getText().toString();
                                 GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
-                                ListFragment.startingTextString = getString(R.string.add_more);
+                                GroupManager.saveGroups();
                                 NavHostFragment.findNavController(ImportFragment.this)
                                         .navigate(R.id.action_import_to_list);
                                 return true;
@@ -71,12 +70,10 @@ public class ImportFragment extends Fragment implements ImportContract.View {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ListFragment.groupListString = editText.getText().toString();
                 // TODO: Testing GroupManager
                 // TODO: Check if thread is finished and then add name
                 GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
                 GroupManager.saveGroups();
-                ListFragment.startingTextString = getString(R.string.add_more);
                 NavHostFragment.findNavController(ImportFragment.this)
                         .navigate(R.id.action_import_to_list);
             }

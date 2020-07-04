@@ -96,13 +96,13 @@ public class GroupManager{
             // data was saved as the JsonArray
             JsonArray groupClasses = gson.fromJson(fileData, JsonArray.class);
             // iterate through every JsonElement and convert it into Group object
-            Iterator<JsonElement> it = groupClasses.iterator();
-            while (it.hasNext()) {
-                JsonElement groupElement = it.next();
-                Group newGroup = Group.fromJson(groupElement.getAsJsonObject());
-                // add group only if it is not empty
-                if (!newGroup.empty()) {
-                    groups.add(newGroup);
+            if(groupClasses != null) {
+                for (JsonElement groupElement : groupClasses) {
+                    Group newGroup = Group.fromJson(groupElement.getAsJsonObject());
+                    // add group only if it is not empty
+                    if (!newGroup.empty()) {
+                        groups.add(newGroup);
+                    }
                 }
             }
         }

@@ -1,8 +1,11 @@
 package com.example.massms.main;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,8 +18,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.massms.R;
+import com.example.massms.models.Group;
 import com.example.massms.models.GroupManager;
 import com.example.massms.models.Person;
+
+import java.util.List;
 
 public class SendMessage extends AppCompatActivity implements SendContract.View {
     private SendContract.Presenter presenter;
@@ -43,17 +49,41 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
         }
 
         ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, GroupManager.getGroups().get(GroupManager.getSize() - 1).getContacts());
+                android.R.layout.simple_list_item_1, GroupManager.getGroup(getIntent().getStringExtra("Group")).getContacts());
         listView.setAdapter(itemsAdapter);
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.sendMessage(messageView.getText().toString(), GroupManager.getGroups().get(GroupManager.getSize() - 1), getApplicationContext());
+                presenter.sendMessage(messageView.getText().toString(), GroupManager.getGroup(getIntent().getStringExtra("Group")), getApplicationContext());
                 messageView.getText().clear();
                 Toast.makeText(getApplicationContext(), "Message sent", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.delete_group, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.delete_group) {
+            GroupManager.deleteGroup(getIntent().getStringExtra("Group"));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
