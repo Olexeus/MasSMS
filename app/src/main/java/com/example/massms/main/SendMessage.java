@@ -90,6 +90,9 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.delete_group, menu);
+        if(getIntent().getIntExtra("Person", -1) == -1) {
+            getMenuInflater().inflate(R.menu.show_conversation_history, menu);
+        }
         return true;
     }
 
@@ -104,6 +107,11 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
         if (id == R.id.delete_group) {
             GroupManager.deleteGroup(getIntent().getStringExtra("Group"));
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            return true;
+        }
+
+        if(id == R.id.show_history){
+            Toast.makeText(this, "Add code here", Toast.LENGTH_SHORT).show();
             return true;
         }
 
