@@ -89,6 +89,10 @@ public class ImportFragment extends Fragment implements ImportContract.View {
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if(data == null){
+            NavHostFragment.findNavController(ImportFragment.this)
+                    .navigate(R.id.action_import_to_list);
+        }
         try {
             super.onActivityResult(requestCode, resultCode, data);
 
