@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.example.massms.models.Group;
 import com.example.massms.models.GroupManager;
 import com.example.massms.models.Person;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SendMessage extends AppCompatActivity implements SendContract.View {
@@ -48,14 +50,36 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
                     new String[]{Manifest.permission.SEND_SMS}, SEND_SMS_PERMISSION_REQUEST_CODE);
         }
 
-        ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, GroupManager.getGroup(getIntent().getStringExtra("Group")).getContacts());
-        listView.setAdapter(itemsAdapter);
+        if(getIntent().getIntExtra("Person", -1) != -1) {
+            List<Person> person = new ArrayList<>();
+            person.add(GroupManager.getGroup(getIntent().
+                    getStringExtra("Group")).getContacts().get(getIntent().
+                    getIntExtra("Person", 0)));
+            ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<Person>(this,
+                    android.R.layout.simple_list_item_1, person);
+            listView.setAdapter(itemsAdapter);
+        }
+        else{
+            ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, GroupManager.getGroup(getIntent().getStringExtra("Group")).getContacts());
+            listView.setAdapter(itemsAdapter);
+        }
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(SendMessage.this, SendMessage.class);
+                intent.putExtra("Group", GroupManager.getGroup(getIntent().getStringExtra("Group")).getGroupName());
+                intent.putExtra("Person", position);
+                SendMessage.this.startActivity(intent);
+            }
+        });
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.sendMessage(messageView.getText().toString(), GroupManager.getGroup(getIntent().getStringExtra("Group")), getApplicationContext());
+                presenter.sendMessage(messageView.getText().toString(), GroupManager.getGroup(getIntent().getStringExtra("Group")),
+                        getIntent().getIntExtra("Person", -1), getApplicationContext());
                 messageView.getText().clear();
                 Toast.makeText(getApplicationContext(), "Message sent", Toast.LENGTH_SHORT).show();
             }

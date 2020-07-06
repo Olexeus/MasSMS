@@ -8,7 +8,7 @@ import com.example.massms.models.Group;
 
 public interface SendContract {
     interface Presenter extends BasePresenter{
-        void sendMessage(String message, Group group, Context context);
+        void sendMessage(String message, Group group, int person, Context context);
     }
 
     interface View extends BaseView<SendContract.Presenter> {
