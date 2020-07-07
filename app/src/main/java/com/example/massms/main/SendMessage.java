@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import com.example.massms.R;
 import com.example.massms.models.Group;
 import com.example.massms.models.GroupManager;
+import com.example.massms.models.Message;
 import com.example.massms.models.Person;
 
 import java.util.ArrayList;
@@ -111,7 +112,18 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
         }
 
         if(id == R.id.show_history){
-            Toast.makeText(this, "Add code here", Toast.LENGTH_SHORT).show();
+            if(item.isChecked()){
+                item.setChecked(false);
+                ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<>(this,
+                        android.R.layout.simple_list_item_1, GroupManager.getGroup(getIntent().getStringExtra("Group")).getContacts());
+                listView.setAdapter(itemsAdapter);
+            }
+            else{
+                item.setChecked(true);
+                ArrayAdapter<Message> itemsAdapter = new ArrayAdapter<>(this,
+                        android.R.layout.simple_list_item_1, GroupManager.getGroup(getIntent().getStringExtra("Group")).getHistory());
+                listView.setAdapter(itemsAdapter);
+            }
             return true;
         }
 

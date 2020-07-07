@@ -9,9 +9,13 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.example.massms.models.Group;
+import com.example.massms.models.Message;
 
+import java.util.Calendar;
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SendPresenter implements SendContract.Presenter {
@@ -55,6 +59,8 @@ public class SendPresenter implements SendContract.Presenter {
                     Log.d("Permission Denied", "DENIED");
                 }
             }
+            group.addMessage(new Message(message, Calendar.getInstance()));
+            Log.d("Message logged", group.getHistory().get(group.getHistory().size() - 1).getText());
         }
         else{
             String phoneNumber = (new BigDecimal(group.getContact(person).getPhone())).toString();
@@ -103,14 +109,25 @@ public class SendPresenter implements SendContract.Presenter {
                         Log.d("Sending Message", "Sending to: " + phoneNumber + " and message: "
                                 + longMessage.get(j));
                         SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(phoneNumber, null, longMessage.get(i), null, null);
+                        smsManager.sendTextMessage(phoneNumber, null, longMessage.get(j), null, null);
                     }
                 } else {
                     Log.d("Permission Denied", "DENIED");
                 }
             }
+            group.addMessage(new Message(message, Calendar.getInstance()));
+            Log.d("Message logged", group.getHistory().get(group.getHistory().size() - 1).getText());
         }
         else{
+            // Splits the message into a List of 160 characters each
+            List<String> longMessage = new ArrayList<>();
+            for (int i = 0; i < message.length(); i += 160) {
+                longMessage.add(message.substring(i, Math.min(i + 160, message.length())));
+            }
+            for (int i = 0; i < longMessage.size(); i++) {
+                Log.d("Outputting Message:", longMessage.get(i));
+            }
+
             String phoneNumber = (new BigDecimal(group.getContact(person).getPhone())).toString();
 
             if (phoneNumber.length() == 0 || message.length() == 0) {
@@ -120,10 +137,13 @@ public class SendPresenter implements SendContract.Presenter {
 
             // Checks permissions once again
             if (checkPermission(context)) {
-                Log.d("Sending Message", "Sending to: " + phoneNumber + " and message: "
-                        + message);
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+                // Sends each 160 character string in the message
+                for (int j = 0; j < longMessage.size(); j++) {
+                    Log.d("Sending Message", "Sending to: " + phoneNumber + " and message: "
+                            + longMessage.get(j));
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(phoneNumber, null, longMessage.get(j), null, null);
+                }
             } else {
                 Log.d("Permission Denied", "DENIED");
             }
