@@ -12,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,10 +24,13 @@ public class Group implements JsonDeserializer<Group> {
     private String fileName;
     @SerializedName("contacts")
     private List<Person> contacts;
+    @SerializedName("history")
+    private List<Message> history;
 
     public Group() {
         groupName = null;
         contacts = new ArrayList<>();
+        history = new ArrayList<>();
     }
 
     public boolean empty() {
@@ -36,6 +40,14 @@ public class Group implements JsonDeserializer<Group> {
     public void addName(String newGroupName) {
         this.groupName = newGroupName;
         this.fileName = this.groupName.replaceAll(" ", "_").toLowerCase();
+    }
+
+    public void addMessage(Message newMessage) {
+        history.add(newMessage);
+    }
+
+    public void addMessage(String text, Calendar date) {
+        history.add(new Message(text, date));
     }
 
     // add contact function for a single contact
@@ -63,12 +75,15 @@ public class Group implements JsonDeserializer<Group> {
     public List<Person> getContacts() {
         return contacts;
     }
+    public List<Message> getHistory() {
+        return history;
+    }
     public String getGroupName() { return groupName; }
     public String getFileName() { return fileName; }
 
     // conversion to JSON
     public static JsonObject toJson (Group group) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().create();
         JsonObject convertedGson = gson.fromJson(gson.toJson(group), JsonObject.class);
         return convertedGson;
     }
@@ -113,6 +128,21 @@ public class Group implements JsonDeserializer<Group> {
         if (convertedGson.has("fileName")) {
             // final String fileName = convertedGson.get("fileName").getAsString();
             convertedGson.remove("fileName");
+        }
+        if (convertedGson.has("history")) {
+            // data was saved as the JsonArray
+            JsonArray messageClasses = convertedGson.get("history").getAsJsonArray();
+            // iterate through every JsonElement and convert it into Group object
+            if(messageClasses != null) {
+                for (JsonElement messageElement : messageClasses) {
+                    Message newMessage = new Gson().fromJson(messageElement.getAsJsonObject(), Message.class);
+                    // add group only if it is not empty
+                    if (!newMessage.empty()) {
+                        newGroup.addMessage(newMessage);
+                    }
+                }
+            }
+            convertedGson.remove("history");
         }
 
         // get the key with contacts

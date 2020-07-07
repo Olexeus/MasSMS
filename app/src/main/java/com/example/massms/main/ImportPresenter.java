@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ImportPresenter implements ImportContract.Presenter {
     private ImportContract.View view;
@@ -57,6 +58,7 @@ public class ImportPresenter implements ImportContract.Presenter {
                     // Creates a new Group class
                     // TODO: sort out this mess
                     Group newGroup = Group.fromJson(MainActivity.excelJsonObject);
+                    newGroup.addMessage("mmmmm", Calendar.getInstance());
                     GroupManager.addGroup(newGroup);
                     timings.addSplit("JSON to Object");
                     timings.dumpToLog();
