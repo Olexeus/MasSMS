@@ -1,4 +1,4 @@
-package com.example.massms.main;
+package com.example.massms.main.Import;
 
 import android.content.Intent;
 import android.os.Bundle;

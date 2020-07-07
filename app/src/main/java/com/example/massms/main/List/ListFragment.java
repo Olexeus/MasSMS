@@ -1,4 +1,4 @@
-package com.example.massms.main;
+package com.example.massms.main.List;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.massms.R;
-import com.example.massms.models.Group;
+import com.example.massms.SendMessage.SendMessage;
 import com.example.massms.models.GroupManager;
-import com.example.massms.models.Person;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

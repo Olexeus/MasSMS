@@ -1,4 +1,4 @@
-package com.example.massms.main;
+package com.example.massms.SendMessage;
 
 import android.Manifest;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.massms.R;
-import com.example.massms.models.Group;
+import com.example.massms.main.MainActivity;
 import com.example.massms.models.GroupManager;
 import com.example.massms.models.Person;
 

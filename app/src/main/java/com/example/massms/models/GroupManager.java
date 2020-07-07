@@ -2,14 +2,13 @@ package com.example.massms.models;
 
 import android.content.Context;
 
-import com.example.massms.main.ListContract;
+import com.example.massms.main.List.ListContract;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class GroupManager{
