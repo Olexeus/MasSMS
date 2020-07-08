@@ -21,4 +21,7 @@
     <string name="show_history">Show Conversation</string>
     <string name="delete_contact">Delete Contact</string>
     <string name="add_contact">Add Contact</string>
+    <string name="create_new_contact">Create New Contact</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
 </resources>

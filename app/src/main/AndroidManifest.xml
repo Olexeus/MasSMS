@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".AddContact.AddContact"
+            android:noHistory="true"
             android:parentActivityName=".SendMessage.SendMessage"/>
         <activity
             android:name=".SendMessage.SendMessage"
