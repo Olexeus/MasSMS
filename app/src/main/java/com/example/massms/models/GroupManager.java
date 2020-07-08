@@ -9,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class GroupManager{
@@ -38,7 +37,6 @@ public class GroupManager{
     public static int getSize() { return groups.size(); }
 
     public static Group getGroup(String name) {
-        // TODO: needs testing
         int groupIndex = GroupManager.findGroup(name);
         if (groupIndex != -1) {
             return groups.get(groupIndex);
@@ -72,7 +70,6 @@ public class GroupManager{
 
     public static void deleteGroup(int index) {
         // delete group even in local memory
-        // TODO: needs testing
         if (index < GroupManager.getSize() && index >= 0) {
             groups.remove(index);
         }

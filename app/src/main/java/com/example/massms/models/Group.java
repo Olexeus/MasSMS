@@ -69,6 +69,14 @@ public class Group implements JsonDeserializer<Group> {
         }
         return null;
     }
+
+    public void deleteContact(Integer index) {
+        // delete contact from the list of contacts
+        if (index < contacts.size() && index >= 0) {
+            contacts.remove(index);
+        }
+    }
+
     public Person getContact(int index) {
         return contacts.get(index);
     }

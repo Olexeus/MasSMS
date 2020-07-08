@@ -21,7 +21,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class ImportPresenter implements ImportContract.Presenter {
     private ImportContract.View view;
@@ -47,7 +46,6 @@ public class ImportPresenter implements ImportContract.Presenter {
                 Uri uri = data.getData();
                 try(InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
                     // getExcelDataAsJsonObject is probably too expensive to run on the ui thread
-                    // TODO: DataManager should deal with this.
                     // TODO: check timing
                     // adb shell setprop log.tag.ExcelToJSON VERBOSE
                     TimingLogger timings = new TimingLogger("ExcelToJSON", "");
@@ -58,7 +56,6 @@ public class ImportPresenter implements ImportContract.Presenter {
                     // Creates a new Group class
                     // TODO: sort out this mess
                     Group newGroup = Group.fromJson(MainActivity.excelJsonObject);
-                    newGroup.addMessage("mmmmm", Calendar.getInstance());
                     GroupManager.addGroup(newGroup);
                     timings.addSplit("JSON to Object");
                     timings.dumpToLog();
