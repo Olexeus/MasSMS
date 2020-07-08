@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.example.massms.models.Group;
+import com.example.massms.models.GroupManager;
 import com.example.massms.models.Message;
 
 import java.util.Calendar;
@@ -60,6 +61,7 @@ public class SendPresenter implements SendContract.Presenter {
                 }
             }
             group.addMessage(new Message(message, Calendar.getInstance()));
+            GroupManager.saveGroups();
             Log.d("Message logged", group.getHistory().get(group.getHistory().size() - 1).getText());
         }
         else{
@@ -116,6 +118,7 @@ public class SendPresenter implements SendContract.Presenter {
                 }
             }
             group.addMessage(new Message(message, Calendar.getInstance()));
+            GroupManager.saveGroups();
             Log.d("Message logged", group.getHistory().get(group.getHistory().size() - 1).getText());
         }
         else{
