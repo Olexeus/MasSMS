@@ -51,21 +51,6 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
                     new String[]{Manifest.permission.SEND_SMS}, SEND_SMS_PERMISSION_REQUEST_CODE);
         }
 
-        if(getIntent().getIntExtra("Person", -1) != -1) {
-            List<Person> person = new ArrayList<>();
-            person.add(GroupManager.getGroup(getIntent().
-                    getStringExtra("Group")).getContacts().get(getIntent().
-                    getIntExtra("Person", 0)));
-            ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<Person>(this,
-                    android.R.layout.simple_list_item_1, person);
-            listView.setAdapter(itemsAdapter);
-        }
-        else{
-            ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, GroupManager.getGroup(getIntent().getStringExtra("Group")).getContacts());
-            listView.setAdapter(itemsAdapter);
-        }
-
         if(getIntent().getIntExtra("Person", -1) == -1) {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -87,6 +72,25 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
                 Toast.makeText(getApplicationContext(), "Message sent", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(getIntent().getIntExtra("Person", -1) != -1) {
+            List<Person> person = new ArrayList<>();
+            person.add(GroupManager.getGroup(getIntent().
+                    getStringExtra("Group")).getContacts().get(getIntent().
+                    getIntExtra("Person", -1)));
+            ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<Person>(this,
+                    android.R.layout.simple_list_item_1, person);
+            listView.setAdapter(itemsAdapter);
+        }
+        else{
+            ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, GroupManager.getGroup(getIntent().getStringExtra("Group")).getContacts());
+            listView.setAdapter(itemsAdapter);
+        }
     }
 
     @Override
@@ -135,7 +139,9 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
         }
 
         if(id == R.id.delete_contact){
-            GroupManager.getGroup(getIntent().getStringExtra("Group")).deleteContact(getIntent().getIntExtra("Person", -1));
+            int index = getIntent().getIntExtra("Person", -1);
+            GroupManager.getGroup(getIntent().getStringExtra("Group")).deleteContact(index);
+            GroupManager.saveGroups();
             finish();
             return true;
         }

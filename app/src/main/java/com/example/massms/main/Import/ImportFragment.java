@@ -1,5 +1,6 @@
 package com.example.massms.main.Import;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -55,10 +57,7 @@ public class ImportFragment extends Fragment implements ImportContract.View {
                                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                             if (event == null || !event.isShiftPressed()) {
-                                GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
-                                GroupManager.saveGroups();
-                                NavHostFragment.findNavController(ImportFragment.this)
-                                        .navigate(R.id.action_import_to_list);
+                                finishImport();
                                 return true;
                             }
                         }
@@ -70,12 +69,7 @@ public class ImportFragment extends Fragment implements ImportContract.View {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Testing GroupManager
-                // TODO: Check if thread is finished and then add name
-                GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
-                GroupManager.saveGroups();
-                NavHostFragment.findNavController(ImportFragment.this)
-                        .navigate(R.id.action_import_to_list);
+                finishImport();
             }
         });
     }
@@ -126,5 +120,15 @@ public class ImportFragment extends Fragment implements ImportContract.View {
     private void importGroup() {
         Intent intent = presenter.createImportIntent();
         startActivityForResult(Intent.createChooser(intent, "ChooseFile"), 1);
+    }
+
+    private void finishImport(){
+        EditText editText = getActivity().findViewById(R.id.editText);
+        GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
+        GroupManager.saveGroups();
+        NavHostFragment.findNavController(ImportFragment.this)
+                .navigate(R.id.action_import_to_list);
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
 }

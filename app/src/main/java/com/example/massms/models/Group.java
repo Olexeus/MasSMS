@@ -69,7 +69,7 @@ public class Group implements JsonDeserializer<Group> {
         return null;
     }
 
-    public void deleteContact(Integer index) {
+    public void deleteContact(int index) {
         // delete contact from the list of contacts
         // GroupManager.saveGroups(); call after this function
         if (index < contacts.size() && index >= 0) {

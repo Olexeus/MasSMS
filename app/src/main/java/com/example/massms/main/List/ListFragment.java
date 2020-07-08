@@ -1,10 +1,12 @@
 package com.example.massms.main.List;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -81,7 +83,6 @@ public class ListFragment extends Fragment implements ListContract.View {
             groupList.setAdapter(itemsAdapter);
             startingText.setVisibility(View.INVISIBLE);
         }
-
 
     }
 
