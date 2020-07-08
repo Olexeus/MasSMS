@@ -66,15 +66,17 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
             listView.setAdapter(itemsAdapter);
         }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SendMessage.this, SendMessage.class);
-                intent.putExtra("Group", GroupManager.getGroup(getIntent().getStringExtra("Group")).getGroupName());
-                intent.putExtra("Person", position);
-                SendMessage.this.startActivity(intent);
-            }
-        });
+        if(getIntent().getIntExtra("Person", -1) == -1) {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(SendMessage.this, SendMessage.class);
+                    intent.putExtra("Group", GroupManager.getGroup(getIntent().getStringExtra("Group")).getGroupName());
+                    intent.putExtra("Person", position);
+                    SendMessage.this.startActivity(intent);
+                }
+            });
+        }
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,9 +92,14 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.delete_group, menu);
+
         if(getIntent().getIntExtra("Person", -1) == -1) {
+            getMenuInflater().inflate(R.menu.add_contact, menu);
+            getMenuInflater().inflate(R.menu.delete_group, menu);
             getMenuInflater().inflate(R.menu.show_conversation_history, menu);
+        }
+        else{
+            getMenuInflater().inflate(R.menu.delete_contact, menu);
         }
         return true;
     }
@@ -124,6 +131,17 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
                         android.R.layout.simple_list_item_1, GroupManager.getGroup(getIntent().getStringExtra("Group")).getHistory());
                 listView.setAdapter(itemsAdapter);
             }
+            return true;
+        }
+
+        if(id == R.id.delete_contact){
+            GroupManager.getGroup(getIntent().getStringExtra("Group")).deleteContact(getIntent().getIntExtra("Person", -1));
+            finish();
+            return true;
+        }
+
+        if(id == R.id.add_contact){
+
             return true;
         }
 
