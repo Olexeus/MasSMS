@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/import_fragment"
-        android:name="com.example.massms.main.ImportFragment"
+        android:name="com.example.massms.main.Import.ImportFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/import_fragment">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/list_fragment"
-        android:name="com.example.massms.main.ListFragment"
+        android:name="com.example.massms.main.List.ListFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/list_fragment">
 

@@ -1,4 +1,4 @@
-package com.example.massms.main;
+package com.example.massms.main.List;
 
 import com.example.massms.BasePresenter;
 import com.example.massms.BaseView;

@@ -1,4 +1,4 @@
-package com.example.massms.main;
+package com.example.massms.SendMessage;
 
 import android.content.Context;
 

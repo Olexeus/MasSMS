@@ -1,4 +1,4 @@
-package com.example.massms.main;
+package com.example.massms.main.List;
 
 public class ListPresenter implements ListContract.Presenter {
     ListContract.View view;
