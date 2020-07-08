@@ -33,10 +33,9 @@ public class Group implements JsonDeserializer<Group> {
         history = new ArrayList<>();
     }
 
-    public boolean empty() {
-        return contacts.isEmpty();
-    }
-
+    /*
+    * Setters
+    * */
     public void addName(String newGroupName) {
         this.groupName = newGroupName;
         this.fileName = this.groupName.replaceAll(" ", "_").toLowerCase();
@@ -72,11 +71,18 @@ public class Group implements JsonDeserializer<Group> {
 
     public void deleteContact(Integer index) {
         // delete contact from the list of contacts
+        // GroupManager.saveGroups(); call after this function
         if (index < contacts.size() && index >= 0) {
             contacts.remove(index);
         }
     }
 
+    /*
+     * Getters
+     * */
+    public boolean empty() {
+        return contacts.isEmpty();
+    }
     public Person getContact(int index) {
         return contacts.get(index);
     }
@@ -89,6 +95,9 @@ public class Group implements JsonDeserializer<Group> {
     public String getGroupName() { return groupName; }
     public String getFileName() { return fileName; }
 
+    /*
+     * Working with Json
+     * */
     // conversion to JSON
     public static JsonObject toJson (Group group) {
         Gson gson = new GsonBuilder().create();
@@ -108,8 +117,6 @@ public class Group implements JsonDeserializer<Group> {
         Gson gson = new GsonBuilder().registerTypeAdapter(Group.class, new Group()).create();
         return gson.fromJson(convertJson, Group.class);
     }
-
-    // TODO: comparator
 
     @Override
     public String toString() {

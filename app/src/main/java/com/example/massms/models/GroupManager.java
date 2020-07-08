@@ -29,7 +29,9 @@ public class GroupManager{
         }
     }
 
-    // getters
+    /*
+     * Getters
+     * */
     public static List<Group> getGroups() {
         return groups;
     }
@@ -53,7 +55,9 @@ public class GroupManager{
         return -1;
     }
 
-    // setters
+    /*
+     * Setters
+     * */
     public static void addGroup(Group newGroup) {
         groups.add(newGroup);
     }
@@ -62,7 +66,9 @@ public class GroupManager{
         groups.addAll(newGroups);
     }
 
-    // interact with memory
+    /*
+     * Interact with memory
+     * */
     public static void deleteGroup(String name) {
         // delete group even in local memory
         GroupManager.deleteGroup(GroupManager.findGroup(name));

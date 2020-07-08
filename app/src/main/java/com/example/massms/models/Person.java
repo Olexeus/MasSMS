@@ -63,8 +63,6 @@ public class Person implements JsonDeserializer<Person> {
         return this.phone;
     }
 
-    // TODO: comparator
-
     @Override
     public String toString() {
         String contactString = String.format(Locale.US, "%nName: %s%nPhone: %.0f%n"
