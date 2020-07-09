@@ -50,7 +50,7 @@
             android:inputType="textCapSentences|textMultiLine"
             android:scrollHorizontally="false"
             android:maxLength="160"
-            android:maxLines="10"
+            android:maxLines="5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/send"
             app:layout_constraintHorizontal_bias="0.5"

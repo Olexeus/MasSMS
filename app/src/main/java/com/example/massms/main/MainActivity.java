@@ -12,21 +12,10 @@ import com.example.massms.R;
 import com.example.massms.models.GroupManager;
 import com.google.gson.JsonObject;
 
-/**
- * Remember that the view should be as dumb as possible.
- * Views only handle what is displayed on screen and user interaction, like a click listener.
- * Views should not contain any business logic, they only display things.
- *  TODO : Everything must be "MVPitized".
- */
 public class MainActivity extends AppCompatActivity implements MainContract.View {
-    // TODO: Move Data.java Stuff to a model
-    public static JsonObject excelJsonObject = null;
-
     // Add a presenter property. The view needs the presenter to invoke user initiated callbacks.
     private MainContract.Presenter presenter;
 
-    // TODO: create list of Group. Maybe class that reads the JSON file with links to all the groups
-    // TODO: function to add the Groups to the GroupList class (or whatever it is called)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,38 +28,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         presenter.onViewCreated();
 
         // Instantiate GroupManager
-        // Most of classes are static. We just need to instantiate it once in the MainActivity
+        // Most of this class is static. We just need to instantiate it once in the MainActivity
         // Otherwise it will not work properly
         new GroupManager(this.getApplicationContext());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.settings, menu);
-        getMenuInflater().inflate(R.menu.import_contacts, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.settings) {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        if (id == R.id.import_contacts) {
-            Toast.makeText(this, "Click the \"Import\" button to get started", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onDestroy() {

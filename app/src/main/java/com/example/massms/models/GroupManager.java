@@ -46,6 +46,15 @@ public class GroupManager{
         return null;
     }
 
+    public static List<String> getGroupNames(){
+        List<String> groupNames = new ArrayList<>();
+        for(int i = 0; i < groups.size(); i++)
+        {
+            groupNames.add(groups.get(i).getGroupName());
+        }
+        return groupNames;
+    }
+
     public static int findGroup(String name) {
         for (Group group : groups) {
             if (group.getFileName().equals(name) || group.getGroupName().equals(name)){

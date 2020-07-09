@@ -26,7 +26,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/name_prompt"
-        android:inputType="textCapSentences"
+        android:inputType="textCapWords"
         app:layout_constraintEnd_toStartOf="@+id/finish"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

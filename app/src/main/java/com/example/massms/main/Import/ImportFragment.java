@@ -23,12 +23,11 @@ import com.example.massms.models.GroupManager;
 
 public class ImportFragment extends Fragment implements ImportContract.View {
     private ImportContract.Presenter presenter;
-    private String groupName;
-    private Button importButton;
+    private EditText editText;
+    private Button finish;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // I'm not sure whether these 2 methods would go in here or onViewCreated since I still don't fully understand fragments.
         setPresenter(new ImportPresenter(this));
         presenter.onViewCreated();
 
@@ -39,14 +38,18 @@ public class ImportFragment extends Fragment implements ImportContract.View {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final EditText editText = view.findViewById(R.id.editText);
-        Button finish = view.findViewById(R.id.finish);
+        editText = view.findViewById(R.id.editText);
+        finish = view.findViewById(R.id.finish);
 
+        // Set to invisible because launching a new intent is noticeably laggy
+        // Instead, the user sees a blank screen for a split second (as if it's loading)
         editText.setVisibility(View.INVISIBLE);
         finish.setVisibility(View.INVISIBLE);
 
+        // The first thing when this fragment is created is launch an intent to find the Excel file
         importGroup();
 
+        // Finish importing if the user hits "enter" on their keyboard
         ((EditText)view.findViewById(R.id.editText)).setOnEditorActionListener(
                 new EditText.OnEditorActionListener() {
                     @Override
@@ -66,6 +69,7 @@ public class ImportFragment extends Fragment implements ImportContract.View {
                 }
         );
 
+        // Finish importing if the user hits finish
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,31 +78,29 @@ public class ImportFragment extends Fragment implements ImportContract.View {
         });
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        EditText editText = getView().findViewById(R.id.editText);
-        groupName = editText.getText().toString();
-    }
-
+    /**
+     * This function is called after the Excel file is selected by the user
+     * @param requestCode Stuff that comes with the function
+     * @param resultCode Stuff that comes with the function
+     * @param data Stuff that comes with the function
+     */
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if(data == null){
-            NavHostFragment.findNavController(ImportFragment.this)
-                    .navigate(R.id.action_import_to_list);
-        }
         try {
             super.onActivityResult(requestCode, resultCode, data);
 
-            EditText editText = getView().findViewById(R.id.editText);
-            Button finish = getView().findViewById(R.id.finish);
-
+            // Sets the views back to visible when the intent is finished
             editText.setVisibility(View.VISIBLE);
             finish.setVisibility(View.VISIBLE);
 
+            // If the StartActivityForResult got something
             if (requestCode == 1 && resultCode == -1) {
-                // Not sure if this should be where this is called
                 presenter.convertExcelToJson(data, getContext());
+            }
+            // If the user pressed "back", abort back to the main screen
+            else{
+                NavHostFragment.findNavController(ImportFragment.this)
+                        .navigate(R.id.action_import_to_list);
             }
         } catch (Exception ex) {
             Toast.makeText(getActivity(), ex.toString(), Toast.LENGTH_SHORT).show();
@@ -117,11 +119,23 @@ public class ImportFragment extends Fragment implements ImportContract.View {
         this.presenter = presenter;
     }
 
+    /**
+     * Creates the intent to find the Excel file. This must be called in this fragment
+     * to return a usable URI to the Excel file
+     */
     private void importGroup() {
         Intent intent = presenter.createImportIntent();
         startActivityForResult(Intent.createChooser(intent, "ChooseFile"), 1);
     }
 
+    /**
+     * This function finishes the import process by
+     * - Getting the name the user typed into the name box and saving it to the most recent
+     * group to be added to the group list.
+     * - Saving the group list
+     * - Navigating to the list fragment
+     * - Hiding the keyboard if it's been left open
+     */
     private void finishImport(){
         EditText editText = getActivity().findViewById(R.id.editText);
         GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());

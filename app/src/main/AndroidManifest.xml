@@ -20,7 +20,6 @@
             android:parentActivityName=".SendMessage.SendMessage"/>
         <activity
             android:name=".SendMessage.SendMessage"
-            android:parentActivityName=".main.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".main.MainActivity"

@@ -18,6 +18,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.massms.R;
 import com.example.massms.SendMessage.SendMessage;
+import com.example.massms.models.Group;
 import com.example.massms.models.GroupManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -26,11 +27,8 @@ import java.util.List;
 
 public class ListFragment extends Fragment implements ListContract.View {
     private ListContract.Presenter presenter;
-    private String groupListString = "0";
-    public static String startingTextString = "0";
     private ListView groupList;
     private TextView startingText;
-    private List<String> groupNames;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +47,7 @@ public class ListFragment extends Fragment implements ListContract.View {
 
         startingText = view.findViewById(R.id.starting_text);
 
+        // Moves to the import fragment when the fab is selected
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,32 +57,32 @@ public class ListFragment extends Fragment implements ListContract.View {
             }
         });
 
+        // Opens the send message activity when a group is selected
         groupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), SendMessage.class);
-                intent.putExtra("Group", groupNames.get(position));
+                intent.putExtra("Group", GroupManager.getGroupNames().get(position));
                 ListFragment.this.startActivity(intent);
             }
         });
 
     }
 
+    /**
+     * On Resume handles the logic for showing the starting hint
+     * If the user has imported a group before, then hide it
+     */
     @Override
     public void onResume(){
         super.onResume();
         if(GroupManager.getSize() != 0){
             groupList.setVisibility(View.VISIBLE);
-            groupNames = new ArrayList<>();
-            for(int i = 0; i < GroupManager.getSize(); i++){
-                groupNames.add(GroupManager.getGroups().get(i).getGroupName());
-            }
             ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(getActivity(),
-                    android.R.layout.simple_list_item_1, groupNames);
+                    android.R.layout.simple_list_item_1, GroupManager.getGroupNames());
             groupList.setAdapter(itemsAdapter);
             startingText.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override

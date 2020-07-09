@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -25,131 +26,53 @@ public class SendPresenter implements SendContract.Presenter {
     SendPresenter(SendContract.View view){ this.view = view; }
 
     @Override
-    public void sendMessage(String message, Group group, int person, Context context) {
-        if(message.length() > 160){
-            sendLongMessage(message, group, person,  context);
+    public void sendMessage(final String message, final Group group, int person, final Context context) {
+        if(person == -1) {
+            Thread sendMessage = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // Sends to each contact in the group
+                    for (int i = 0; i < group.getContacts().size(); i++) {
+                        sendingMessage(message, group, i, context);
+                    }
+                    // Adds a new message to the conversation history for this group
+                    group.addMessage(new Message(message, Calendar.getInstance()));
+                    GroupManager.saveGroups();
+                }
+            });
+            sendMessage.start();
+            // Alerts the user when finished
+            Toast.makeText(context, "Messages sent", Toast.LENGTH_SHORT).show();
         }
         else{
-            sendShortMessage(message, group, person, context);
+            sendingMessage(message, group, person, context);
+            // Alerts the user when finished
+            Toast.makeText(context, "Message sent", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean checkPermission(Context context){
+    private boolean canSendSMS(Context context){
+        // Checks if permission has been granted to the app to send messages
         int check = ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS);
         return (check == PackageManager.PERMISSION_GRANTED);
     }
-    private void sendShortMessage(String message, Group group, int person, Context context){
-        if(person == -1) {
-            // Sends to each contact in the group
-            for (int i = 0; i < group.getContacts().size(); i++) {
-                // We have to use BigDecimal because floats store in scientific notation
-                String phoneNumber = (new BigDecimal(group.getContact(i).getPhone())).toString();
 
-                if (phoneNumber.length() == 0 || message.length() == 0) {
-                    Log.d("Blank values", phoneNumber + " " + message);
-                    return;
-                }
+    private void sendingMessage(String message, Group group, int person, Context context){
+        // We have to use BigDecimal because floats store in scientific notation
+        String phoneNumber = (new BigDecimal(group.getContact(person).getPhone())).toString();
 
-                // Checks permissions once again
-                if (checkPermission(context)) {
-                    Log.d("Sending Message", "Sending to: " + phoneNumber + " and message: "
-                            + message);
-                    SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-                } else {
-                    Log.d("Permission Denied", "DENIED");
-                }
-            }
-            group.addMessage(new Message(message, Calendar.getInstance()));
-            GroupManager.saveGroups();
-            Log.d("Message logged", group.getHistory().get(group.getHistory().size() - 1).getText());
+        // Stops users from accidentally sending blank messages
+        if (phoneNumber.length() == 0 || message.length() == 0) {
+            return;
         }
-        else{
-            String phoneNumber = (new BigDecimal(group.getContact(person).getPhone())).toString();
 
-            if (phoneNumber.length() == 0 || message.length() == 0) {
-                Log.d("Blank values", phoneNumber + " " + message);
-                return;
-            }
-
-            // Checks permissions once again
-            if (checkPermission(context)) {
-                Log.d("Sending Message", "Sending to: " + phoneNumber + " and message: "
-                        + message);
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-            } else {
-                Log.d("Permission Denied", "DENIED");
-            }
-        }
-    }
-    private void sendLongMessage(String message, Group group, int person, Context context){
-        if(person != -1) {
-            // Splits the message into a List of 160 characters each
-            List<String> longMessage = new ArrayList<>();
-            for (int i = 0; i < message.length(); i += 160) {
-                longMessage.add(message.substring(i, Math.min(i + 160, message.length())));
-            }
-            for (int i = 0; i < longMessage.size(); i++) {
-                Log.d("Outputting Message:", longMessage.get(i));
-            }
-
-            // Sends to each contact in the group
-            for (int i = 0; i < group.getContacts().size(); i++) {
-                // We have to use BigDecimal because floats store in scientific notation
-                String phoneNumber = (new BigDecimal(group.getContact(i).getPhone())).toString();
-
-                if (phoneNumber.length() == 0 || longMessage.size() == 0) {
-                    Log.d("Blank values", phoneNumber + " " + longMessage);
-                    return;
-                }
-
-                // Checks permissions once again
-                if (checkPermission(context)) {
-                    // Sends each 160 character string in the message
-                    for (int j = 0; j < longMessage.size(); j++) {
-                        Log.d("Sending Message", "Sending to: " + phoneNumber + " and message: "
-                                + longMessage.get(j));
-                        SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(phoneNumber, null, longMessage.get(j), null, null);
-                    }
-                } else {
-                    Log.d("Permission Denied", "DENIED");
-                }
-            }
-            group.addMessage(new Message(message, Calendar.getInstance()));
-            GroupManager.saveGroups();
-            Log.d("Message logged", group.getHistory().get(group.getHistory().size() - 1).getText());
-        }
-        else{
-            // Splits the message into a List of 160 characters each
-            List<String> longMessage = new ArrayList<>();
-            for (int i = 0; i < message.length(); i += 160) {
-                longMessage.add(message.substring(i, Math.min(i + 160, message.length())));
-            }
-            for (int i = 0; i < longMessage.size(); i++) {
-                Log.d("Outputting Message:", longMessage.get(i));
-            }
-
-            String phoneNumber = (new BigDecimal(group.getContact(person).getPhone())).toString();
-
-            if (phoneNumber.length() == 0 || message.length() == 0) {
-                Log.d("Blank values", phoneNumber + " " + message);
-                return;
-            }
-
-            // Checks permissions once again
-            if (checkPermission(context)) {
-                // Sends each 160 character string in the message
-                for (int j = 0; j < longMessage.size(); j++) {
-                    Log.d("Sending Message", "Sending to: " + phoneNumber + " and message: "
-                            + longMessage.get(j));
-                    SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(phoneNumber, null, longMessage.get(j), null, null);
-                }
-            } else {
-                Log.d("Permission Denied", "DENIED");
-            }
+        // Checks permissions once again
+        if (canSendSMS(context)) {
+            SmsManager smsManager = SmsManager.getDefault();
+            // Sends text
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+        } else {
+            Log.e("Permission Denied", "DENIED");
         }
     }
 

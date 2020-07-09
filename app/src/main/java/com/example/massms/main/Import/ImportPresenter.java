@@ -23,9 +23,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+/**
+ * The Presenter holding all the functions for our Import view
+ */
+
 public class ImportPresenter implements ImportContract.Presenter {
     private ImportContract.View view;
     private static final String TAG = "ImportPresenter";
+    private static JsonObject excelJsonObject = null;
 
     // Constructor takes in a view, along with any other dependencies
     ImportPresenter(ImportContract.View view) {
@@ -38,29 +43,28 @@ public class ImportPresenter implements ImportContract.Presenter {
 
     }
 
+    /**
+     * Converts an Excel Object into a JSON object, which is saved
+     * to a new group and added via Group Manager to the list of
+     * Groups
+     * @param data the Intent data
+     * @param context the application context (to get the Excel data)
+     */
+
     @Override
     public void convertExcelToJson(final Intent data, final Context context) {
-        // TODO: Clean this up.
+        // Runs the task of converting to JSON on a separate thread
         Thread ExcelToJsonThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Uri uri = data.getData();
                 try(InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
-                    // getExcelDataAsJsonObject is probably too expensive to run on the ui thread
-                    // TODO: check timing
-                    // adb shell setprop log.tag.ExcelToJSON VERBOSE
-                    TimingLogger timings = new TimingLogger("ExcelToJSON", "");
-                    MainActivity.excelJsonObject = getExcelDataAsJsonObject(inputStream);
-                    Log.d("First Fragment", MainActivity.excelJsonObject.toString());
-                    timings.addSplit("Excel to JSON");
 
-                    // Creates a new Group class
-                    // TODO: sort out this mess
-                    Group newGroup = Group.fromJson(MainActivity.excelJsonObject);
+                    excelJsonObject = getExcelDataAsJsonObject(inputStream);
+
+                    // Creates a new Group instance
+                    Group newGroup = Group.fromJson(excelJsonObject);
                     GroupManager.addGroup(newGroup);
-                    timings.addSplit("JSON to Object");
-                    timings.dumpToLog();
-                    Log.d("Group object", newGroup.toString());
 
                 } catch (IOException e) {
                     Log.d(TAG, "Somethings wrong lol");
@@ -75,18 +79,26 @@ public class ImportPresenter implements ImportContract.Presenter {
     public void onDestroy() {
     }
 
+    /**
+     * Changes the Excel data into a JSON object
+     * @param inputStream The data of the Excel file
+     * @return the JSON object that represents the Excel file
+     */
+
     private JsonObject getExcelDataAsJsonObject(InputStream inputStream) {
+
         JsonObject sheetsJsonObject = new JsonObject();
         Workbook workbook = null;
 
         try {
-            // I think this is better for some reason. Leaving the other just in case.
+            // Creates a new Excel workbook from the input stream
             workbook = WorkbookFactory.create(inputStream);
-            //workbook = new XSSFWorkbook(inputStream);
         } catch (IOException | InvalidFormatException e) {
             e.printStackTrace();
         }
 
+        // Nested for loops to get each column of each row
+        // Adds each row to the JSON Object as it converts
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
 
             JsonArray sheetArray = new JsonArray();
@@ -126,6 +138,13 @@ public class ImportPresenter implements ImportContract.Presenter {
         }
         return sheetsJsonObject;
     }
+
+    /**
+     * Creates an intent that get's Excel data.
+     * This function is here so it is trivial if we need to
+     * change the type of data the Intent is retrieving
+     * @return an intent that the fragment can use
+     */
 
     @Override
     public Intent createImportIntent() {
