@@ -1,12 +1,10 @@
 package com.example.massms.main.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -18,12 +16,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.massms.R;
 import com.example.massms.SendMessage.SendMessage;
-import com.example.massms.models.Group;
 import com.example.massms.models.GroupManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ListFragment extends Fragment implements ListContract.View {
     private ListContract.Presenter presenter;
