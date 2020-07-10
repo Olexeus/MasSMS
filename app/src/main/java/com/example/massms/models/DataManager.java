@@ -35,15 +35,15 @@ public class DataManager{
 
     public String readFile(){
         //openFileInput reads data from internal storage.
-        FileInputStream fis = null;
-        Scanner scanner = null;
+        FileInputStream fis;
+        Scanner scanner;
         String content = null;
         try {
             fis = context.openFileInput(fileName);
             scanner = new Scanner(fis);
             //A delimiter is most likely not going to be necessary.
             //scanner.useDelimiter("\\Z");
-            String nextChar = null;
+            String nextChar;
             while (scanner.hasNext()) {
                 nextChar = scanner.next();
                 if (content != null) {
@@ -66,8 +66,6 @@ public class DataManager{
         try {
             fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             fos.write(internalStorageBinding.getBytes());
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
         } catch (IOException e){
             e.printStackTrace();
         } finally {

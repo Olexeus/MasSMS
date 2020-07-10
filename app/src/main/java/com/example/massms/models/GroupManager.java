@@ -2,7 +2,6 @@ package com.example.massms.models;
 
 import android.content.Context;
 
-import com.example.massms.main.List.ListContract;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -12,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroupManager{
-    ListContract.View view;
-    private static List<Group> groups = new ArrayList<Group>();
+    private static List<Group> groups = new ArrayList<>();
     private static Context context;
     private static DataManager dataManager;
     private static final Gson gson = new Gson();
@@ -94,7 +92,7 @@ public class GroupManager{
     public static void saveGroups() {
         // Create JsonObject and append Groups.toJson. Then convert and save
         // do the same for retrieveGroups
-        List<JsonObject> groupClasses = new ArrayList<JsonObject>();
+        List<JsonObject> groupClasses = new ArrayList<>();
         for (Group g: groups) {
             groupClasses.add(Group.toJson(g));
         }
@@ -102,7 +100,7 @@ public class GroupManager{
     }
 
     private static void retrieveGroups() {
-        GroupManager.groups = new ArrayList<Group>();
+        GroupManager.groups = new ArrayList<>();
         if (GroupManager.context != null) {
             String fileData = dataManager.readFile();
             // data was saved as the JsonArray
