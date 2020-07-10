@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,7 +20,6 @@ import androidx.core.content.ContextCompat;
 import com.example.massms.AddContact.AddContact;
 import com.example.massms.R;
 import com.example.massms.main.MainActivity;
-import com.example.massms.models.Group;
 import com.example.massms.models.GroupManager;
 import com.example.massms.models.Message;
 import com.example.massms.models.Person;
@@ -101,7 +99,7 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
             person.add(GroupManager.getGroup(getIntent().
                     getStringExtra("Group")).getContacts().get(getIntent().
                     getIntExtra("Person", -1)));
-            ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<Person>(this,
+            ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, person);
             listView.setAdapter(itemsAdapter);
         }
@@ -192,4 +190,9 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
         return (check == PackageManager.PERMISSION_GRANTED);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
 }

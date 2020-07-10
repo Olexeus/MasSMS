@@ -15,10 +15,6 @@ import com.example.massms.models.Message;
 
 import java.util.Calendar;
 import java.math.BigDecimal;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class SendPresenter implements SendContract.Presenter {
     private SendContract.View view;
@@ -78,6 +74,6 @@ public class SendPresenter implements SendContract.Presenter {
 
     @Override
     public void onDestroy() {
-
+        this.view = null;
     }
 }
