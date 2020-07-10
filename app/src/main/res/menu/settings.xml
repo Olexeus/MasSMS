@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.massms.main.MainActivity">
     <item
-        android:id="@+id/settings"
+        android:id="@+id/DarkMode"
+        android:checkable="false"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/ToggleDarkMode"
         app:showAsAction="never" />
 </menu>

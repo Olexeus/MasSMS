@@ -2,6 +2,7 @@ package com.example.massms.SendMessage;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,6 +40,14 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
     protected void onCreate(Bundle savedInstanceState) {
         setPresenter(new SendPresenter(this));
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPref = getSharedPreferences("DarkMode", MODE_PRIVATE);
+        if (sharedPref.getBoolean("Dark", false)) {
+            setTheme(R.style.DarkTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+        }
+
         setContentView(R.layout.activity_send_message);
 
         messageView = findViewById(R.id.message_view);

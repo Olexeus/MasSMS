@@ -24,4 +24,6 @@
     <string name="create_new_contact">Create New Contact</string>
     <string name="name">Name</string>
     <string name="phone_number">Phone Number</string>
+
+    <string name="ToggleDarkMode">Toggle Dark Mode</string>
 </resources>
