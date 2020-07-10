@@ -40,7 +40,6 @@ public class ImportPresenter implements ImportContract.Presenter {
     // Called by the view when it is created
     @Override
     public void onViewCreated() {
-
     }
 
     /**
@@ -50,7 +49,6 @@ public class ImportPresenter implements ImportContract.Presenter {
      * @param data the Intent data
      * @param context the application context (to get the Excel data)
      */
-
     @Override
     public void convertExcelToJson(final Intent data, final Context context) {
         // Runs the task of converting to JSON on a separate thread
@@ -67,7 +65,7 @@ public class ImportPresenter implements ImportContract.Presenter {
                     GroupManager.addGroup(newGroup);
 
                 } catch (IOException e) {
-                    Log.d(TAG, "Somethings wrong lol");
+                    Log.d(TAG, e.toString());
                 }
             }
         }, "ExcelToJsonThread");
@@ -77,6 +75,7 @@ public class ImportPresenter implements ImportContract.Presenter {
     // Called by the view when it is destroyed
     @Override
     public void onDestroy() {
+        this.view = null;
     }
 
     /**
@@ -84,7 +83,6 @@ public class ImportPresenter implements ImportContract.Presenter {
      * @param inputStream The data of the Excel file
      * @return the JSON object that represents the Excel file
      */
-
     private JsonObject getExcelDataAsJsonObject(InputStream inputStream) {
 
         JsonObject sheetsJsonObject = new JsonObject();
@@ -145,7 +143,6 @@ public class ImportPresenter implements ImportContract.Presenter {
      * change the type of data the Intent is retrieving
      * @return an intent that the fragment can use
      */
-
     @Override
     public Intent createImportIntent() {
         Intent intent;
