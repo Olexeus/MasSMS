@@ -141,7 +141,7 @@ public class ImportFragment extends Fragment implements ImportContract.View {
      * - Hiding the keyboard if it's been left open
      */
     private void finishImport(){
-        if((System.currentTimeMillis() - startTime) > 3000) {
+        if((System.currentTimeMillis() - startTime) > 3000 && (System.currentTimeMillis() - startTime) != System.currentTimeMillis()) {
             EditText editText = getActivity().findViewById(R.id.editText);
             GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
             GroupManager.saveGroups();
