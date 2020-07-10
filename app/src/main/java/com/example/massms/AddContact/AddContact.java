@@ -25,9 +25,9 @@ public class AddContact extends AppCompatActivity {
 
         SharedPreferences sharedPref = getSharedPreferences("DarkMode", MODE_PRIVATE);
         if (sharedPref.getBoolean("Dark", false)) {
-            setTheme(R.style.DarkTheme);
+            setTheme(R.style.DarkThemeWithActionBar);
         } else {
-            setTheme(R.style.AppTheme);
+            setTheme(R.style.AppThemeWithActionBar);
         }
 
         setContentView(R.layout.activity_add_contact);

@@ -16,8 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".AddContact.AddContact"
-            android:noHistory="true"
-            android:parentActivityName=".SendMessage.SendMessage"/>
+            android:noHistory="true"/>
         <activity
             android:name=".SendMessage.SendMessage"
             android:windowSoftInputMode="adjustResize" />
