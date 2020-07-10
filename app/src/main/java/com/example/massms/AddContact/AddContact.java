@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.massms.R;
 import com.example.massms.SendMessage.SendContract;
@@ -39,6 +40,13 @@ public class AddContact extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (name.getText().toString().trim().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "Must enter name!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (number.getText().toString().trim().length() < 10) {
+                    Toast.makeText(getApplicationContext(), "Phone number must be at least 10 numbers!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 GroupManager.getGroup(getIntent().getStringExtra("Group")).addContact(new
                         Person(name.getText().toString(), Double.parseDouble(number.getText().toString())));
                 GroupManager.saveGroups();
