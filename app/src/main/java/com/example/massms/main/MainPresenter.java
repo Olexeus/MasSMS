@@ -24,6 +24,6 @@ public class MainPresenter implements MainContract.Presenter {
     // Called by the view when it is destroyed
     @Override
     public void onDestroy() {
-
+        this.view = null;
     }
 }

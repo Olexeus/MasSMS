@@ -14,6 +14,5 @@ public interface MainContract {
     }
 
     interface View extends BaseView<Presenter> {
-
     }
 }
