@@ -21,10 +21,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.massms.R;
 import com.example.massms.models.GroupManager;
 
+import java.util.Timer;
+
 public class ImportFragment extends Fragment implements ImportContract.View {
     private ImportContract.Presenter presenter;
     private EditText editText;
     private Button finish;
+    long startTime = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -124,6 +127,7 @@ public class ImportFragment extends Fragment implements ImportContract.View {
      * to return a usable URI to the Excel file
      */
     private void importGroup() {
+        startTime = System.currentTimeMillis();
         Intent intent = presenter.createImportIntent();
         startActivityForResult(Intent.createChooser(intent, "ChooseFile"), 1);
     }
@@ -137,12 +141,20 @@ public class ImportFragment extends Fragment implements ImportContract.View {
      * - Hiding the keyboard if it's been left open
      */
     private void finishImport(){
-        EditText editText = getActivity().findViewById(R.id.editText);
-        GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
-        GroupManager.saveGroups();
-        NavHostFragment.findNavController(ImportFragment.this)
-                .navigate(R.id.action_import_to_list);
-        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        long endTime = System.currentTimeMillis();
+        if((System.nanoTime() - startTime) > 3000) {
+            EditText editText = getActivity().findViewById(R.id.editText);
+            GroupManager.getGroups().get(GroupManager.getSize() - 1).addName(editText.getText().toString());
+            GroupManager.saveGroups();
+            NavHostFragment.findNavController(ImportFragment.this)
+                    .navigate(R.id.action_import_to_list);
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
+        else {
+            Toast.makeText(getContext(), "Still importing. Please try again in 2 seconds", Toast.LENGTH_SHORT).show();
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }

@@ -35,6 +35,7 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
     Button send;
     ListView listView;
     String groupName;
+    boolean history = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +73,12 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(SendMessage.this, SendMessage.class);
-                    intent.putExtra("Group", GroupManager.getGroup(groupName).getGroupName());
-                    intent.putExtra("Person", position);
-                    SendMessage.this.startActivity(intent);
+                    if(!history) {
+                        Intent intent = new Intent(SendMessage.this, SendMessage.class);
+                        intent.putExtra("Group", GroupManager.getGroup(groupName).getGroupName());
+                        intent.putExtra("Person", position);
+                        SendMessage.this.startActivity(intent);
+                    }
                 }
             });
         }
@@ -154,6 +157,7 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
                 ArrayAdapter<Person> itemsAdapter = new ArrayAdapter<>(this,
                         android.R.layout.simple_list_item_1, GroupManager.getGroup(groupName).getContacts());
                 listView.setAdapter(itemsAdapter);
+                history = false;
             }
             // Else, check, and show conversations
             else{
@@ -161,6 +165,7 @@ public class SendMessage extends AppCompatActivity implements SendContract.View 
                 ArrayAdapter<Message> itemsAdapter = new ArrayAdapter<>(this,
                         android.R.layout.simple_list_item_1, GroupManager.getGroup(groupName).getHistory());
                 listView.setAdapter(itemsAdapter);
+                history = true;
             }
             return true;
         }
