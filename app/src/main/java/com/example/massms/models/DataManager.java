@@ -18,10 +18,12 @@ public class DataManager{
     String fileName = "masssms";
     Context context;
 
+    //Constructor
     public DataManager(Context context){
         this.context = context;
     }
 
+    //This method makes sure we have a directory created on the phone to save the app data. In case there isn't, one shall be created.
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public void createDirectory() {
         File directory;
@@ -33,16 +35,16 @@ public class DataManager{
         File[] files = directory.listFiles();
     }
 
+    //readFile will read the file so that it can be used to access, modify, or delete any values from memory.
     public String readFile(){
-        //openFileInput reads data from internal storage.
         FileInputStream fis;
         Scanner scanner;
         String content = null;
         try {
             fis = context.openFileInput(fileName);
             scanner = new Scanner(fis);
-            //A delimiter is most likely not going to be necessary.
-            //scanner.useDelimiter("\\Z");
+
+            //The while loop is necessary to iterate over all the characters in memory.
             String nextChar;
             while (scanner.hasNext()) {
                 nextChar = scanner.next();
@@ -59,7 +61,7 @@ public class DataManager{
         }
         return content;
     }
-
+    //This method makes sure that all changes made to the file after we read it are saved back to the phone's memory. The method will overwrite everything.
     public void writeToFile(@org.jetbrains.annotations.NotNull String internalStorageBinding) {
         FileOutputStream fos = null;
         //openFileOutput writes data to internal storage.
